@@ -1,0 +1,375 @@
+// ═══════════════════════════════════════════════════════════════
+// data.js — All content lives here. Edit lessons, references,
+// and challenges without touching the UI or styling.
+// ═══════════════════════════════════════════════════════════════
+
+const LESSONS = [
+  {
+    group: "Foundations",
+    items: [
+      {
+        id: "intro",
+        title: "What Is Regex?",
+        desc: "A regex is a pattern that describes text you want to find. Instead of searching for exact words, you describe the shape of what you're looking for — like saying \"find anything that looks like a phone number\" instead of searching for one specific number.",
+        pattern: "hello",
+        text: "hello world, say hello again"
+      },
+      {
+        id: "literal",
+        title: "Literal Matching",
+        desc: "The simplest pattern is just the text itself. Searching for 'the' finds every exact occurrence of those three letters. This is case-sensitive: 'the' won't match 'The'.",
+        pattern: "the",
+        text: "the quick brown fox jumps over the lazy dog"
+      },
+      {
+        id: "dot",
+        title: "Wildcard: the Dot",
+        desc: "A dot (.) matches any single character. Think of it as a blank tile in Scrabble — it can be anything. So c.t matches 'cat', 'cut', 'c@t', but not 'coat' (two characters in the middle).",
+        pattern: "c.t",
+        text: "cat cut cot c@t coat"
+      }
+    ]
+  },
+  {
+    group: "Quantifiers",
+    items: [
+      {
+        id: "plus",
+        title: "One or More: +",
+        desc: "The + means \"one or more of the previous thing.\" So a+ finds groups of a's: 'a', 'aa', 'aaa'. It must find at least one.",
+        pattern: "a+",
+        text: "a aa aaa b ba baa"
+      },
+      {
+        id: "star",
+        title: "Zero or More: *",
+        desc: "The * means \"zero or more.\" Unlike +, it also matches if the character isn't there at all. lo*g matches 'lg', 'log', 'loog', etc.",
+        pattern: "lo*g",
+        text: "lg log loog looog"
+      },
+      {
+        id: "question",
+        title: "Optional: ?",
+        desc: "The ? makes the previous character optional (0 or 1 times). colou?r matches both 'color' (American) and 'colour' (British).",
+        pattern: "colou?r",
+        text: "color colour colouur"
+      },
+      {
+        id: "range",
+        title: "Exact Counts: {n,m}",
+        desc: "Curly braces let you be precise. {3} = exactly 3, {2,4} = between 2 and 4, {3,} = 3 or more. Useful for fixed-length data like zip codes.",
+        pattern: "\\d{3,5}",
+        text: "12 123 1234 12345 123456"
+      }
+    ]
+  },
+  {
+    group: "Character Classes",
+    items: [
+      {
+        id: "digits",
+        title: "Digits: \\d",
+        desc: "\\d matches any single digit (0–9). Pair it with + to match whole numbers: \\d+ finds '3', '42', '1000'. Essential for extracting amounts from financial text.",
+        pattern: "\\d+",
+        text: "Invoice #4521: 3 items at $15 each = $45 total"
+      },
+      {
+        id: "words",
+        title: "Word Characters: \\w",
+        desc: "\\w matches letters, digits, and underscores. \\w+ grabs whole words and numbers. In NLP, this is the basis for simple tokenization.",
+        pattern: "\\w+",
+        text: "hello_world test-case item@2 ready!"
+      },
+      {
+        id: "spaces",
+        title: "Whitespace: \\s",
+        desc: "\\s matches spaces, tabs, and newlines. \\s+ finds gaps between words. Useful for cleaning messy text with irregular spacing.",
+        pattern: "\\s+",
+        text: "too    many     spaces   here"
+      },
+      {
+        id: "sets",
+        title: "Custom Sets: [abc]",
+        desc: "[aeiou] matches any single vowel. [a-z] matches any lowercase letter. [0-9] is the same as \\d. You can combine ranges: [a-zA-Z] matches any letter.",
+        pattern: "[aeiou]",
+        text: "hello world"
+      },
+      {
+        id: "negation",
+        title: "Negated Sets: [^abc]",
+        desc: "Adding ^ inside brackets means NOT. [^0-9] matches anything that isn't a digit. [^aeiou] matches consonants and other characters.",
+        pattern: "[^aeiou\\s]",
+        text: "hello world regex"
+      }
+    ]
+  },
+  {
+    group: "Structure & Grouping",
+    items: [
+      {
+        id: "groups",
+        title: "Groups: ()",
+        desc: "Parentheses group parts of a pattern together. (ha)+ matches 'ha', 'haha', 'hahaha' — the whole group repeats, not just the last character.",
+        pattern: "(ha)+",
+        text: "ha haha hahaha"
+      },
+      {
+        id: "or",
+        title: "Alternation: |",
+        desc: "The pipe | means OR. cat|dog matches either word. You can chain multiple options: cat|dog|bird.",
+        pattern: "cat|dog|bird",
+        text: "I have a cat, a dog, and a bird"
+      },
+      {
+        id: "anchors",
+        title: "Anchors: ^ and $",
+        desc: "^ matches the start of the text (or line with multiline flag). $ matches the end. ^Hello ensures 'Hello' is at the very beginning.",
+        pattern: "^Hello",
+        text: "Hello world\nHello there\nSay Hello"
+      },
+      {
+        id: "escape",
+        title: "Escaping: \\",
+        desc: "Characters like . * + ? have special meaning. To match a literal dot, use \\. — the backslash tells regex to treat the next character literally.",
+        pattern: "\\$\\d+\\.\\d{2}",
+        text: "Price: $9.99 and $100.00 total"
+      }
+    ]
+  }
+];
+
+
+// ───────────────────────────────────────────────
+// Reference cards by category
+// ───────────────────────────────────────────────
+
+const REFERENCE = [
+  {
+    cat: "Metacharacters",
+    items: [
+      { sym: ".",   meaning: "Any character (except newline)", pattern: "c.t",     text: "cat cut cot" },
+      { sym: "^",   meaning: "Start of string/line",          pattern: "^Hello",   text: "Hello world" },
+      { sym: "$",   meaning: "End of string/line",            pattern: "world$",   text: "Hello world" },
+      { sym: "|",   meaning: "OR — match either side",        pattern: "cat|dog",  text: "cat and dog" },
+      { sym: "\\",  meaning: "Escape special character",      pattern: "\\.",       text: "3.14 and 2.71" }
+    ]
+  },
+  {
+    cat: "Quantifiers",
+    items: [
+      { sym: "*",     meaning: "Zero or more",            pattern: "lo*g",       text: "lg log loog" },
+      { sym: "+",     meaning: "One or more",             pattern: "a+",         text: "a aa aaa" },
+      { sym: "?",     meaning: "Zero or one (optional)",  pattern: "colou?r",    text: "color colour" },
+      { sym: "{n}",   meaning: "Exactly n times",         pattern: "\\d{3}",     text: "12 123 1234" },
+      { sym: "{n,m}", meaning: "Between n and m times",   pattern: "\\d{2,4}",   text: "1 12 123 1234 12345" },
+      { sym: "{n,}",  meaning: "n or more times",         pattern: "a{2,}",      text: "a aa aaa aaaa" }
+    ]
+  },
+  {
+    cat: "Character Classes",
+    items: [
+      { sym: "\\d", meaning: "Any digit (0–9)",                  pattern: "\\d+",  text: "abc 123 def 456" },
+      { sym: "\\D", meaning: "Any non-digit",                    pattern: "\\D+",  text: "abc 123 def" },
+      { sym: "\\w", meaning: "Word char (letter, digit, _)",     pattern: "\\w+",  text: "hello_123!" },
+      { sym: "\\W", meaning: "Non-word character",               pattern: "\\W+",  text: "hello world!" },
+      { sym: "\\s", meaning: "Whitespace (space, tab, newline)", pattern: "\\s+",  text: "a  b\tc" },
+      { sym: "\\S", meaning: "Non-whitespace",                   pattern: "\\S+",  text: "a  b  c" }
+    ]
+  },
+  {
+    cat: "Sets & Ranges",
+    items: [
+      { sym: "[abc]",   meaning: "Any one of a, b, or c",   pattern: "[aeiou]",  text: "hello world" },
+      { sym: "[a-z]",   meaning: "Any lowercase letter",    pattern: "[a-z]+",   text: "Hello World" },
+      { sym: "[A-Z]",   meaning: "Any uppercase letter",    pattern: "[A-Z]",    text: "Hello World" },
+      { sym: "[0-9]",   meaning: "Any digit (same as \\d)", pattern: "[0-9]+",   text: "abc123" },
+      { sym: "[^abc]",  meaning: "NOT a, b, or c",          pattern: "[^aeiou]", text: "hello" }
+    ]
+  },
+  {
+    cat: "Anchors & Groups",
+    items: [
+      { sym: "(…)",    meaning: "Capture group",                  pattern: "(\\w+)@(\\w+)", text: "user@site" },
+      { sym: "(?=…)",  meaning: "Lookahead (followed by)",        pattern: "\\w+(?=ing)",   text: "running jumping" },
+      { sym: "(?!…)",  meaning: "Negative lookahead",             pattern: "\\d+(?!\\$)",   text: "100$ 200 300$" }
+    ]
+  }
+];
+
+
+// ───────────────────────────────────────────────
+// Challenge exercises (starter → intermediate → applied)
+// ───────────────────────────────────────────────
+
+const CHALLENGES = [
+  // ── Starter ──
+  {
+    id: "c1", diff: "starter",
+    title: "Find All Numbers",
+    desc: "Write a pattern that matches every number in this text.",
+    text: "Order #4521: 3 widgets at $15 each, shipped to 90210",
+    expected: ["4521", "3", "15", "90210"],
+    hints: [
+      "Numbers are made of digits. What shortcut matches a digit?",
+      "\\d matches one digit. How do you match one or more?"
+    ],
+    solution: "\\d+"
+  },
+  {
+    id: "c2", diff: "starter",
+    title: "Extract Words Only",
+    desc: "Match every word (letters only, no numbers or punctuation).",
+    text: "Hello World! Test-123 regex_fun",
+    expected: ["Hello", "World", "Test", "regex", "fun"],
+    hints: [
+      "[a-zA-Z] matches a single letter.",
+      "Add + to match one or more letters in a row."
+    ],
+    solution: "[a-zA-Z]+"
+  },
+  {
+    id: "c3", diff: "starter",
+    title: "Spot the Vowels",
+    desc: "Find every individual vowel character in this sentence.",
+    text: "The quick brown fox jumps over the lazy dog",
+    expected: ["e", "u", "i", "o", "o", "u", "o", "e", "e", "a", "o"],
+    hints: [
+      "Use a character set with [...]",
+      "[aeiou] matches any single vowel."
+    ],
+    solution: "[aeiou]"
+  },
+
+  // ── Intermediate ──
+  {
+    id: "c4", diff: "intermediate",
+    title: "Match Dollar Amounts",
+    desc: "Extract prices like $9.99 or $100.00 from this receipt.",
+    text: "Subtotal: $45.99, Tax: $3.68, Shipping: $5.00, Total: $54.67",
+    expected: ["$45.99", "$3.68", "$5.00", "$54.67"],
+    hints: [
+      "Start with a literal $ (need to escape it: \\$)",
+      "Then digits, a literal dot, and exactly 2 more digits."
+    ],
+    solution: "\\$\\d+\\.\\d{2}"
+  },
+  {
+    id: "c5", diff: "intermediate",
+    title: "Find Email Addresses",
+    desc: "Write a pattern to extract the email addresses from this text.",
+    text: "Contact john.doe@example.com or support@company.org for help",
+    expected: ["john.doe@example.com", "support@company.org"],
+    hints: [
+      "Emails have: something @ something . something",
+      "[\\w.]+ matches word characters and dots. Build from there."
+    ],
+    solution: "[\\w.]+@[\\w]+\\.[a-z]+"
+  },
+  {
+    id: "c6", diff: "intermediate",
+    title: "Match Dates (MM/DD/YYYY)",
+    desc: "Find all dates in month/day/year format.",
+    text: "Filed on 01/15/2024, revised 12/01/2023, due 3/5/2025",
+    expected: ["01/15/2024", "12/01/2023", "3/5/2025"],
+    hints: [
+      "Months and days can be 1 or 2 digits: \\d{1,2}",
+      "Years are 4 digits. Separate with literal slashes."
+    ],
+    solution: "\\d{1,2}/\\d{1,2}/\\d{4}"
+  },
+
+  // ── Applied: Fraud Detection ──
+  {
+    id: "c7", diff: "applied",
+    title: "Structuring Transactions",
+    desc: "Amounts just under $10,000 can signal structuring (splitting deposits to avoid reporting thresholds). Find all amounts between $9,000–$9,999.",
+    text: "Deposit: $9,500 | Deposit: $9,999 | Deposit: $10,000 | Deposit: $9,001 | Deposit: $8,500",
+    expected: ["$9,500", "$9,999", "$9,001"],
+    hints: [
+      "Start with \\$ then the digit 9, then a comma, then 3 digits.",
+      "\\$9,\\d{3} matches $9 followed by comma and exactly 3 digits."
+    ],
+    solution: "\\$9,\\d{3}"
+  },
+  {
+    id: "c8", diff: "applied",
+    title: "Extract IP Addresses",
+    desc: "Find all IP addresses in this server log to identify suspicious login sources.",
+    text: "Login from 192.168.1.1 at 08:30, failed login from 10.0.0.255, alert from 172.16.0.1",
+    expected: ["192.168.1.1", "10.0.0.255", "172.16.0.1"],
+    hints: [
+      "An IP is four groups of 1–3 digits separated by dots.",
+      "\\d{1,3} matches 1–3 digits. Dots must be escaped: \\."
+    ],
+    solution: "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+  },
+  {
+    id: "c9", diff: "applied",
+    title: "Flag Round-Dollar Transactions",
+    desc: "In fraud analysis, many round-dollar amounts (like $500, $1000) can indicate automated or suspicious activity. Find amounts that end in 00.",
+    text: "Transfers: $500, $1,200, $75, $3,000, $149, $10,000, $250",
+    expected: ["$500", "$1,200", "$3,000", "$10,000"],
+    hints: [
+      "These amounts end with 00. But they might have commas in them too.",
+      "Try matching \\$ then digits/commas ending in 00."
+    ],
+    solution: "\\$[\\d,]*00"
+  }
+];
+
+
+// ───────────────────────────────────────────────
+// Cheat sheet table data
+// ───────────────────────────────────────────────
+
+const CHEATSHEET = [
+  {
+    title: "Metacharacters",
+    rows: [
+      [".",    "Any character except newline",              "c.t → cat, cut"],
+      ["^",    "Start of string (or line with m flag)",     "^Hello → Hello at start"],
+      ["$",    "End of string (or line with m flag)",       "end$ → end at finish"],
+      ["|",    "OR — alternation",                          "a|b → a or b"],
+      ["\\\\", "Escape special character",                  "\\\\. → literal dot"]
+    ]
+  },
+  {
+    title: "Quantifiers",
+    rows: [
+      ["*",     "Zero or more",            "a* → \"\", a, aa, aaa"],
+      ["+",     "One or more",             "a+ → a, aa, aaa"],
+      ["?",     "Zero or one (optional)",  "colou?r → color, colour"],
+      ["{n}",   "Exactly n times",         "\\\\d{3} → 123"],
+      ["{n,m}", "Between n and m times",   "\\\\d{2,4} → 12, 123, 1234"]
+    ]
+  },
+  {
+    title: "Character Classes",
+    rows: [
+      ["\\\\d", "Any digit (0–9)",                  "\\\\d+ → 42, 100"],
+      ["\\\\D", "Any non-digit",                    "\\\\D+ → abc, hello"],
+      ["\\\\w", "Word character (letter, digit, _)", "\\\\w+ → hello_123"],
+      ["\\\\W", "Non-word character",               "\\\\W → !, @, spaces"],
+      ["\\\\s", "Whitespace (space, tab, newline)",  "\\\\s+ → spaces between words"],
+      ["\\\\S", "Non-whitespace",                   "\\\\S+ → words"]
+    ]
+  },
+  {
+    title: "Sets & Ranges",
+    rows: [
+      ["[abc]",    "Any one character in the set",  "[aeiou] → vowels"],
+      ["[a-z]",    "Range: any lowercase letter",   "[a-z]+ → hello"],
+      ["[A-Za-z]", "Any letter (upper or lower)",   "[A-Za-z]+ → Hello"],
+      ["[^abc]",   "Any character NOT in the set",  "[^0-9] → non-digits"]
+    ]
+  },
+  {
+    title: "Anchors & Groups",
+    rows: [
+      ["(…)",    "Capture group — treat as unit",          "(ab)+ → ab, abab"],
+      ["(?:…)",  "Non-capturing group",                    "(?:ab)+ (no capture)"],
+      ["(?=…)",  "Lookahead — followed by",                "\\\\w+(?=ing)"],
+      ["(?!…)",  "Negative lookahead — NOT followed by",   "\\\\d+(?!\\\\$)"]
+    ]
+  }
+];
