@@ -4,7 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regex Tutorial & Reference</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0f0f1e; color: #e0e0e0; font-family: Arial, sans-serif; }
+        .header { background: linear-gradient(135deg, #0f3460 0%, #FF6600 100%); padding: 2rem; text-align: center; color: white; border-bottom: 3px solid #FF6600; }
+        .header h1 { margin: 0; font-size: 2.5rem; }
+        .header p { margin: 0.5rem 0 0 0; color: #e0e0e0; }
+        .tabs { display: flex; gap: 1rem; justify-content: center; padding: 1rem; flex-wrap: wrap; }
+        .tab-btn { padding: 0.8rem 1.5rem; background: rgba(255,102,0,0.1); border: 2px solid #444; color: #e0e0e0; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .tab-btn.active { background: #FF6600; border-color: #FF6600; color: white; }
+        .tab-btn:hover { background: rgba(255,102,0,0.2); border-color: #FF6600; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        .mode { display: none; }
+        .mode.active { display: block; }
+        .box { background: rgba(26,26,46,0.6); border: 2px solid #444; border-radius: 12px; padding: 2rem; margin-bottom: 2rem; }
+        .box h2 { color: #FF6600; margin-top: 0; margin-bottom: 1.5rem; }
+        .box h3 { color: #FFB84D; margin: 1rem 0 0.8rem 0; }
+        label { display: block; color: #FF6600; font-weight: 600; margin-bottom: 0.5rem; }
+        input, textarea { width: 100%; padding: 0.7rem; background: #2a2a3e; border: 2px solid #444; color: #e0e0e0; border-radius: 6px; font-family: monospace; margin-bottom: 1rem; box-sizing: border-box; }
+        input:focus, textarea:focus { outline: none; border-color: #FF6600; }
+        textarea { min-height: 80px; }
+        .checkbox-item { display: flex; gap: 0.5rem; color: #b0b0b0; margin-bottom: 0.5rem; }
+        .results { background: #1a1a2e; padding: 1rem; border-radius: 6px; margin-top: 1rem; border: 1px solid #444; }
+        .error { color: #ff7a7a; background: rgba(220,53,69,0.2); padding: 0.8rem; border-radius: 4px; border-left: 3px solid #dc3545; }
+        .count { background: #FF6600; color: white; padding: 0.5rem 0.8rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; margin-bottom: 0.8rem; }
+        .highlighted { background: #2a2a3e; padding: 0.8rem; border-radius: 6px; font-family: monospace; line-height: 1.6; word-break: break-all; margin-top: 0.8rem; }
+        .match { background: #FF6600; color: white; padding: 1px 2px; border-radius: 2px; font-weight: bold; }
+        .badge { background: #2a2a3e; padding: 0.4rem 0.7rem; border-radius: 4px; border-left: 2px solid #FF6600; font-family: monospace; color: #00ff88; font-size: 0.8rem; display: inline-block; margin-right: 0.5rem; margin-top: 0.5rem; }
+        button { padding: 0.8rem 1rem; background: #2a2a3e; border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; }
+        button:hover { background: #FF6600; color: white; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+        .card { background: #2a2a3e; padding: 1.2rem; border-radius: 8px; border-left: 3px solid #FF6600; }
+        .card h4 { color: #FF6600; margin-top: 0; margin-bottom: 0.8rem; }
+        .card p { color: #b0b0b0; font-size: 0.9rem; margin: 0.5rem 0; }
+        .card code { background: #1a1a2e; padding: 0.2rem 0.4rem; border-radius: 3px; color: #00ff88; font-family: monospace; }
+        .two-col { display: grid; grid-template-columns: 250px 1fr; gap: 2rem; }
+        .sidebar { display: flex; flex-direction: column; gap: 0.5rem; }
+        .lesson-btn { width: 100%; padding: 0.8rem; background: rgba(255,102,0,0.1); border: 2px solid #444; color: #e0e0e0; border-radius: 8px; cursor: pointer; text-align: left; }
+        .lesson-btn.active { background: #FF6600; color: white; border-color: #FF6600; }
+        .lesson-btn:hover { background: rgba(255,102,0,0.2); border-color: #FF6600; }
+        .lesson-content { background: #2a2a3e; padding: 1rem; border-radius: 8px; border-left: 3px solid #FF6600; margin: 1rem 0; white-space: pre-wrap; color: #d0d0d0; line-height: 1.5; }
+        .pattern-cats { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .pattern-cat-btn { padding: 0.7rem 1rem; background: rgba(255,102,0,0.1); border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600; }
+        .pattern-cat-btn.active { background: #FF6600; color: white; }
+        .pattern-cat-btn:hover { background: rgba(255,102,0,0.2); }
+        @media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -13,21 +58,17 @@
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('learn')">📚 Learn</button>
-        <button class="tab-btn" onclick="switchTab('reference')">📖 Reference</button>
-        <button class="tab-btn" onclick="switchTab('practice')">✏️ Practice</button>
-        <button class="tab-btn" onclick="switchTab('realworld')">🌍 Real-World</button>
+        <button class="tab-btn active" onclick="switchTab(event, 'learn')">📚 Learn</button>
+        <button class="tab-btn" onclick="switchTab(event, 'reference')">📖 Reference</button>
+        <button class="tab-btn" onclick="switchTab(event, 'practice')">✏️ Practice</button>
+        <button class="tab-btn" onclick="switchTab(event, 'realworld')">🌍 Real-World</button>
     </div>
 
     <div id="learn" class="mode active">
         <div class="container">
             <div class="two-col">
-                <div class="sidebar">
-                    <div class="lesson-list" id="lessonList"></div>
-                </div>
-                <div class="box">
-                    <div id="lessonContent"></div>
-                </div>
+                <div class="sidebar" id="lessonList"></div>
+                <div class="box" id="lessonContent"></div>
             </div>
         </div>
     </div>
@@ -65,36 +106,228 @@
             <h2>🎮 Playground</h2>
             <label>Regex Pattern:</label>
             <input type="text" id="pattern" value="\w+" />
-            
             <label>Test Text:</label>
             <textarea id="testText">Hello World 123</textarea>
-            
             <label>Flags:</label>
-            <div class="checkbox-group">
+            <div style="margin-bottom: 1rem;">
                 <div class="checkbox-item">
                     <input type="checkbox" id="flagG" checked />
-                    <label for="flagG">Global (g)</label>
+                    <label for="flagG" style="margin: 0;">Global (g)</label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" id="flagI" />
-                    <label for="flagI">Case-insensitive (i)</label>
+                    <label for="flagI" style="margin: 0;">Case-insensitive (i)</label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" id="flagM" />
-                    <label for="flagM">Multiline (m)</label>
+                    <label for="flagM" style="margin: 0;">Multiline (m)</label>
                 </div>
             </div>
-            
-            <div class="results">
-                <div id="results">
-                    <div class="count">Found 0 matches</div>
-                    <div class="highlighted">Hello World 123</div>
-                </div>
-            </div>
+            <div class="results" id="results"></div>
         </div>
     </div>
 
-    <script src="data.js"></script>
-    <script src="app.js"></script>
+    <script>
+        const lessons = {
+            intro: { title: "🎯 Introduction", content: "A regex is a pattern for matching text. Used to find, extract, or replace text patterns in strings." },
+            simple: { title: "1. Simple Matching", content: "Search for literal text. Case-sensitive by default.\n\nExample: 'the' matches 'the' in 'The quick brown fox. the lazy dog.'" },
+            dot: { title: "2. Wildcard: .", content: ". matches ANY single character.\n\nExample: 'c.t' matches 'cat', 'cut', 'cot', 'c@t'" },
+            plus: { title: "3. One or More: +", content: "+ means one or more times.\n\nExample: 'a+' matches 'a', 'aa', 'aaa'" },
+            star: { title: "4. Zero or More: *", content: "* means zero or more.\n\nExample: 'coo*l' matches 'col', 'cool', 'coool'" },
+            question: { title: "5. Optional: ?", content: "? makes it optional (0 or 1).\n\nExample: 'colou?r' matches 'color' and 'colour'" },
+            range: { title: "6. Range: {n,m}", content: "Specific counts.\n{3}=exactly 3\n{3,5}=3-5\n{3,}=3 or more" },
+            digits: { title: "7. Digits: \\d", content: "\\d matches any digit (0-9).\n\nExample: \\d+ matches '3', '12', '100'" },
+            words: { title: "8. Word: \\w", content: "\\w matches letters, digits, underscore.\n\\w+ extracts full words" },
+            spaces: { title: "9. Whitespace: \\s", content: "\\s matches spaces, tabs, newlines.\n\\s+ finds sequences of spaces" },
+            brackets: { title: "10. Sets: [abc]", content: "[abc] matches one from set.\n[a-z]=lowercase, [0-9]=digits" },
+            negation: { title: "11. Negation: [^...]", content: "[^abc] matches NOT a,b,c\n[^aeiou] matches consonants" },
+            escape: { title: "12. Escape: \\", content: "Use \\ to match special chars literally\n\\. = period, \\$ = dollar" },
+            groups: { title: "13. Groups: ()", content: "() creates groups.\n(ab)+ matches 'ab', 'abab'" },
+            or: { title: "14. OR: |", content: "| means OR.\ncat|dog matches 'cat' or 'dog'" },
+            anchors: { title: "15. Anchors: ^ $", content: "^ = start, $ = end\n^Hello matches at start\ning$ matches at end" },
+            charclasses: { title: "16. Character Classes", content: "\\d=digit, \\D=non-digit\n\\w=word, \\W=non-word\n\\s=space, \\S=non-space" },
+            pythonflags: { title: "17. Python Flags", content: "re.I = case-insensitive\nre.M = multiline\nre.S = dotall" }
+        };
+
+        const patterns = {
+            basics: { name: 'Basics', items: [
+                { symbol: '.', meaning: 'Any char', example: 'cat, cut' },
+                { symbol: '^A', meaning: 'Start', example: 'Apple' },
+                { symbol: 'ing$', meaning: 'End', example: 'coding' },
+                { symbol: 'cat|dog', meaning: 'OR', example: 'cats' },
+                { symbol: '\\.', meaning: 'Literal .', example: '$5.99' }
+            ]},
+            quantifiers: { name: 'Quantifiers', items: [
+                { symbol: 'a*', meaning: 'Zero+', example: 'col, cool' },
+                { symbol: 'a+', meaning: 'One+', example: 'a, aa, aaa' },
+                { symbol: 'lo?ng', meaning: 'Optional', example: 'long, lng' },
+                { symbol: '\\d{3}', meaning: 'Exactly 3', example: '123' },
+                { symbol: '\\d{3,5}', meaning: '3-5', example: '123, 1234' }
+            ]},
+            charsets: { name: 'Character Sets', items: [
+                { symbol: '[abc]', meaning: 'Any in set', example: 'cat, car' },
+                { symbol: '[a-z]', meaning: 'Lowercase', example: 'hello' },
+                { symbol: '[0-9]', meaning: 'Digit', example: '123' },
+                { symbol: '[^abc]', meaning: 'NOT abc', example: 'xyz' }
+            ]},
+            classes: { name: 'Character Classes', items: [
+                { symbol: '\\d', meaning: 'Digit', example: '123' },
+                { symbol: '\\D', meaning: 'Non-digit', example: 'abc' },
+                { symbol: '\\w', meaning: 'Word', example: 'hello123' },
+                { symbol: '\\W', meaning: 'Non-word', example: '!@#' },
+                { symbol: '\\s', meaning: 'Space', example: 'space' },
+                { symbol: '\\S', meaning: 'Non-space', example: 'text' }
+            ]},
+            advanced: { name: 'Advanced', items: [
+                { symbol: '(abc)', meaning: 'Group', example: '(cat|dog)s' },
+                { symbol: 'a(?=b)', meaning: 'Lookahead', example: 'a before b' },
+                { symbol: 'a(?!b)', meaning: 'Neg lookahead', example: 'a not b' }
+            ]}
+        };
+
+        const exercises = [
+            { title: 'Numbers', desc: 'Find all numbers', text: 'I have 3 apples, 5 oranges, 12 grapes', hint: '\\d+' },
+            { title: 'Words', desc: 'Extract words', text: 'Hello World How are you', hint: '\\w+' },
+            { title: 'Prices', desc: 'Match prices', text: 'Cost: $5.99, Price: $100.00', hint: '\\$\\d+\\.\\d{2}' },
+            { title: 'Vowels', desc: 'Find vowels', text: 'Hello World', hint: '[aeiou]' },
+            { title: 'Uppercase', desc: 'Capital letters', text: 'Hello world Test', hint: '^[A-Z]' },
+            { title: 'Consecutive', desc: 'Multiple a', text: 'I have aa and aaa', hint: 'a{2,}' },
+            { title: 'Email', desc: 'Email pattern', text: 'john@example.com', hint: '[\\w.-]+@[\\w.-]+' },
+            { title: 'URLs', desc: 'Web address', text: 'Visit https://google.com', hint: 'https?://[\\w.-]+' },
+            { title: 'Hex Color', desc: 'Color codes', text: 'Color: #FF5733 or #abc', hint: '#[a-fA-F0-9]{3,6}' },
+            { title: 'Phone', desc: 'Phone format', text: 'Call (555) 123-4567', hint: '[\\d\\(\\)\\-\\s]+' },
+            { title: 'Card', desc: 'Card number', text: '4532-0151-1283-0366', hint: '\\d{4}-\\d{4}-\\d{4}-\\d{4}' },
+            { title: 'Username', desc: 'Valid usernames', text: 'john_doe user123 admin', hint: '[a-zA-Z0-9_]+' }
+        ];
+
+        const realWorld = [
+            { name: '📧 Email', pattern: '[\\w.-]+@[\\w.-]+\\.\\w+', example: 'john.doe@example.com' },
+            { name: '☎️ Phone', pattern: '[\\d\\(\\)\\-\\.\\s]+\\d{4}', example: '(555) 123-4567' },
+            { name: '🌐 URL', pattern: 'https?://[a-zA-Z0-9.-]+\\.\\w+', example: 'https://www.example.com' },
+            { name: '📅 Date', pattern: '\\d{1,2}/\\d{1,2}/\\d{4}', example: '12/25/2023' },
+            { name: '💳 Card', pattern: '\\d{4}[\\-\\s]\\d{4}[\\-\\s]\\d{4}[\\-\\s]\\d{4}', example: '4532-0151-1283-0366' },
+            { name: '🖥️ IP', pattern: '\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}', example: '192.168.1.1' },
+            { name: '🎨 Hex Color', pattern: '#[a-fA-F0-9]{3,6}', example: '#FF5733' },
+            { name: '👤 Username', pattern: '[a-zA-Z0-9_]{3,}', example: 'john_doe123' },
+            { name: '⏰ Time', pattern: '\\d{1,2}:\\d{2}(:\\d{2})?', example: '14:30' },
+            { name: '📍 Hashtag', pattern: '#\\w+', example: '#python' }
+        ];
+
+        function switchTab(e, tab) {
+            document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+        }
+
+        function updateResults() {
+            const pattern = document.getElementById('pattern').value;
+            const text = document.getElementById('testText').value;
+            let flags = '';
+            if (document.getElementById('flagG').checked) flags += 'g';
+            if (document.getElementById('flagI').checked) flags += 'i';
+            if (document.getElementById('flagM').checked) flags += 'm';
+
+            try {
+                const regex = new RegExp(pattern, flags);
+                const matches = [];
+                let match;
+
+                if (flags.includes('g')) {
+                    while ((match = regex.exec(text)) !== null) {
+                        matches.push({ text: match[0], index: match.index });
+                    }
+                } else {
+                    match = regex.exec(text);
+                    if (match) {
+                        matches.push({ text: match[0], index: match.index });
+                    }
+                }
+
+                let highlighted = '';
+                let lastIndex = 0;
+                matches.forEach(function(m) {
+                    highlighted += text.substring(lastIndex, m.index);
+                    highlighted += '<span class="match">' + m.text + '</span>';
+                    lastIndex = m.index + m.text.length;
+                });
+                highlighted += text.substring(lastIndex);
+
+                let badges = '';
+                matches.forEach(function(m) {
+                    badges += '<div class="badge">"' + m.text + '"</div>';
+                });
+
+                let html = '<div class="count">Found ' + matches.length + ' match' + (matches.length !== 1 ? 'es' : '') + '</div>';
+                html += '<div class="highlighted">' + highlighted + '</div>';
+                if (badges) html += '<div style="margin-top: 0.8rem;">' + badges + '</div>';
+
+                document.getElementById('results').innerHTML = html;
+            } catch (err) {
+                document.getElementById('results').innerHTML = '<div class="error">Error: ' + err.message + '</div>';
+            }
+        }
+
+        function loadLesson(key) {
+            document.querySelectorAll('.lesson-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-lesson="' + key + '"]').classList.add('active');
+            const lesson = lessons[key];
+            document.getElementById('lessonContent').innerHTML = '<h3>' + lesson.title + '</h3><div class="lesson-content">' + lesson.content + '</div>';
+        }
+
+        function loadPatterns(cat) {
+            document.querySelectorAll('.pattern-cat-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-cat="' + cat + '"]').classList.add('active');
+            const pats = patterns[cat];
+            let html = '';
+            pats.items.forEach(function(p) {
+                html += '<div class="card"><h4><code>' + p.symbol + '</code></h4><p>' + p.meaning + '</p><p style="color: #888;"><em>Example: ' + p.example + '</em></p></div>';
+            });
+            document.getElementById('patternGrid').innerHTML = html;
+        }
+
+        function setTest(pattern, text) {
+            document.getElementById('pattern').value = pattern;
+            document.getElementById('testText').value = text;
+            updateResults();
+        }
+
+        function initPage() {
+            let lessonHTML = '';
+            for (let key in lessons) {
+                lessonHTML += '<button class="lesson-btn' + (key === 'intro' ? ' active' : '') + '" data-lesson="' + key + '" onclick="loadLesson(\'' + key + '\')">' + lessons[key].title + '</button>';
+            }
+            document.getElementById('lessonList').innerHTML = lessonHTML;
+
+            let catHTML = '';
+            for (let cat in patterns) {
+                catHTML += '<button class="pattern-cat-btn' + (cat === 'basics' ? ' active' : '') + '" data-cat="' + cat + '" onclick="loadPatterns(\'' + cat + '\')">' + patterns[cat].name + '</button>';
+            }
+            document.getElementById('patternCats').innerHTML = catHTML;
+
+            let practiceHTML = '';
+            exercises.forEach(function(ex) {
+                practiceHTML += '<div class="card"><h4>' + ex.title + '</h4><p>' + ex.desc + '</p><p style="color: #999; font-size: 0.85rem;">Test: ' + ex.text + '</p><p style="color: #FFB84D; font-size: 0.85rem;">Hint: <code>' + ex.hint + '</code></p><button onclick="setTest(\'' + ex.hint.replace(/\\/g, '\\\\') + '\', \'' + ex.text.replace(/'/g, "\\'") + '\')">Try It</button></div>';
+            });
+            document.getElementById('practiceGrid').innerHTML = practiceHTML;
+
+            let rwHTML = '';
+            realWorld.forEach(function(rw) {
+                rwHTML += '<div class="card"><h4>' + rw.name + '</h4><p style="color: #888;"><code>' + rw.pattern + '</code></p><p style="color: #999; font-size: 0.85rem;">Example: ' + rw.example + '</p><button onclick="setTest(\'' + rw.pattern.replace(/\\/g, '\\\\') + '\', \'' + rw.example + '\')">Try It</button></div>';
+            });
+            document.getElementById('realworldGrid').innerHTML = rwHTML;
+
+            loadLesson('intro');
+            loadPatterns('basics');
+            updateResults();
+        }
+
+        window.addEventListener('load', initPage);
+        document.getElementById('pattern').addEventListener('input', updateResults);
+        document.getElementById('testText').addEventListener('input', updateResults);
+        document.getElementById('flagG').addEventListener('change', updateResults);
+        document.getElementById('flagI').addEventListener('change', updateResults);
+        document.getElementById('flagM').addEventListener('change', updateResults);
+    </script>
 </body>
 </html>
