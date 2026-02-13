@@ -23,7 +23,9 @@
         input, textarea { width: 100%; padding: 0.5rem; background: #2a2a3e; border: 2px solid #444; color: #e0e0e0; border-radius: 6px; font-family: monospace; margin-bottom: 0.6rem; box-sizing: border-box; font-size: 0.85rem; }
         input:focus, textarea:focus { outline: none; border-color: #FF6600; }
         textarea { min-height: 60px; }
-        .checkbox-item { display: flex; gap: 0.5rem; color: #b0b0b0; margin-bottom: 0.3rem; font-size: 0.8rem; align-items: center; }
+        .checkbox-item { display: flex; gap: 0.5rem; color: #b0b0b0; margin-bottom: 0.5rem; font-size: 0.8rem; align-items: center; width: fit-content; }
+        .checkbox-item input { flex-shrink: 0; }
+        .checkbox-item label { margin: 0 !important; }
         .results { background: #1a1a2e; padding: 0.7rem; border-radius: 6px; border: 1px solid #444; }
         .error { color: #ff7a7a; background: rgba(220,53,69,0.2); padding: 0.6rem; border-radius: 4px; border-left: 3px solid #dc3545; font-size: 0.85rem; }
         .count { background: #FF6600; color: white; padding: 0.25rem 0.5rem; border-radius: 15px; font-size: 0.7rem; font-weight: 600; display: inline-block; margin-bottom: 0.4rem; }
@@ -101,14 +103,14 @@
             <label>Test Text:</label>
             <textarea id="testText">Hello World 123</textarea>
             <label>Flags:</label>
-            <div style="margin-bottom: 0.6rem;">
+            <div style="margin-bottom: 0.6rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; max-width: 400px;">
                 <div class="checkbox-item">
                     <input type="checkbox" id="flagG" checked />
                     <label for="flagG" style="margin: 0;">Global (g)</label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" id="flagI" />
-                    <label for="flagI" style="margin: 0;">Case-insensitive (i)</label>
+                    <label for="flagI" style="margin: 0;">Case-i (i)</label>
                 </div>
                 <div class="checkbox-item">
                     <input type="checkbox" id="flagM" />
