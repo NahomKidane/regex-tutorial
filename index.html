@@ -4,20 +4,818 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Regex Workshop — AI 102</title>
-
-  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+/* ═══════════════════════════════════════════════════════════════
+   styles.css — Clean Google-inspired theme
+   Bright, airy, professional. Reads well on projectors & Canvas.
+   ═══════════════════════════════════════════════════════════════ */
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="css/styles.css">
+/* ── Reset & Tokens ────────────────────────────────────────── */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Surface */
+  --bg:             #FFFFFF;
+  --bg-subtle:      #F8F9FA;
+  --bg-hover:       #F1F3F4;
+  --bg-active:      #E8F0FE;
+  --bg-code:        #1B1B2F;
+  --bg-code-surface:#252540;
+
+  /* Text */
+  --text:           #202124;
+  --text-secondary: #5F6368;
+  --text-tertiary:  #9AA0A6;
+  --text-on-dark:   #E8EAED;
+
+  /* Primary — clean Google blue */
+  --blue:           #1A73E8;
+  --blue-hover:     #1765CC;
+  --blue-light:     #E8F0FE;
+  --blue-muted:     #D2E3FC;
+
+  /* Accent — warm highlight for matches */
+  --orange:         #EA8600;
+  --orange-light:   #FEF7E0;
+  --orange-glow:    #FBBF24;
+
+  /* Semantic */
+  --green:          #1E8E3E;
+  --green-light:    #E6F4EA;
+  --red:            #D93025;
+  --red-light:      #FCE8E6;
+  --purple:         #7C3AED;
+  --purple-light:   #F3E8FF;
+
+  /* Borders & Elevation */
+  --border:         #DADCE0;
+  --border-light:   #E8EAED;
+  --radius:         8px;
+  --radius-lg:      12px;
+  --radius-pill:    100px;
+  --shadow-xs:      0 1px 2px rgba(60,64,67,0.08);
+  --shadow-sm:      0 1px 3px rgba(60,64,67,0.12), 0 1px 2px rgba(60,64,67,0.08);
+  --shadow-md:      0 2px 6px rgba(60,64,67,0.15), 0 1px 3px rgba(60,64,67,0.10);
+  --shadow-lg:      0 8px 24px rgba(60,64,67,0.15);
+
+  /* Type */
+  --font-body:      'DM Sans', 'Google Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono:      'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-subtle);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* ── Header ────────────────────────────────────────────────── */
+
+.header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border-light);
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-xs);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+
+.header-brand .icon {
+  width: 34px;
+  height: 34px;
+  background: var(--blue);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: white;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: -0.03em;
+}
+
+.header-brand h1 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+.header-brand .subtitle {
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+
+/* ── Mode tabs (pill segmented control) ────────────────────── */
+
+.mode-tabs {
+  display: flex;
+  gap: 0;
+  background: var(--bg-subtle);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  border: 1px solid var(--border-light);
+}
+
+.mode-tab {
+  padding: 0.38rem 1rem;
+  background: none;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.mode-tab:hover {
+  color: var(--text);
+  background: var(--bg-hover);
+}
+
+.mode-tab.active {
+  background: var(--blue);
+  color: white;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ── Main split layout ─────────────────────────────────────── */
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr 440px;
+  gap: 0;
+  min-height: calc(100vh - 56px);
+}
+
+
+/* ── Content panel (left) ──────────────────────────────────── */
+
+.content-panel {
+  padding: 1.5rem 2rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 56px);
+  background: var(--bg-subtle);
+}
+
+.panel-section         { display: none; }
+.panel-section.active  { display: block; animation: fadeIn 0.2s ease; }
+
+.section-heading {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 1.5rem 0 0.6rem;
+}
+
+.section-heading:first-child { margin-top: 0; }
+
+
+/* ── Playground panel (right) ──────────────────────────────── */
+
+.playground-panel {
+  background: var(--bg-code);
+  padding: 1.25rem 1.35rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.playground-panel h2 {
+  color: var(--text-tertiary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #2E2E48;
+}
+
+.pg-label {
+  color: #8B8BA7;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.3rem;
+}
+
+.pg-input,
+.pg-textarea {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-code-surface);
+  border: 1.5px solid #3A3A55;
+  color: #F0F0F8;
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.pg-textarea {
+  line-height: 1.55;
+  resize: vertical;
+  min-height: 88px;
+  font-size: 0.84rem;
+}
+
+.pg-input:focus,
+.pg-textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
+}
+
+.pg-placeholder { color: #555; font-size: 0.82rem; }
+
+
+/* ── Flags ──────────────────────────────────────────────────── */
+
+.flags-row {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.flag-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.flag-toggle input[type="checkbox"] {
+  accent-color: var(--blue);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.flag-toggle .flag-letter {
+  color: #B0B0C8;
+  font-size: 0.78rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.flag-toggle .flag-label {
+  color: #666;
+  font-size: 0.65rem;
+  font-weight: 500;
+}
+
+
+/* ── Results area ──────────────────────────────────────────── */
+
+.results-area {
+  flex: 1;
+  background: rgba(15,15,30,0.6);
+  border: 1px solid #2E2E48;
+  border-radius: var(--radius);
+  padding: 0.85rem;
+  min-height: 130px;
+  overflow-y: auto;
+}
+
+.match-count {
+  display: inline-block;
+  background: var(--blue);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.18rem 0.55rem;
+  border-radius: var(--radius-pill);
+  margin-bottom: 0.55rem;
+  letter-spacing: 0.01em;
+}
+
+.match-count.zero { background: #555; }
+
+.highlighted-text {
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.8;
+  color: #D0D0E0;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.match-hl {
+  background: var(--orange);
+  color: white;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-weight: 600;
+  box-shadow: 0 0 8px rgba(234,134,0,0.25);
+}
+
+.match-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid #2A2A42;
+}
+
+.match-badge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #80E8A8;
+  background: rgba(128,232,168,0.07);
+  padding: 0.18rem 0.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(128,232,168,0.12);
+}
+
+.pg-error {
+  color: #FF8A8A;
+  background: rgba(217,48,37,0.1);
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  border-left: 3px solid var(--red);
+}
+
+
+/* ── Lesson cards ──────────────────────────────────────────── */
+
+.lesson-card {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.15rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 0.5rem;
+}
+
+.lesson-card:hover {
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.lesson-card.active {
+  border-color: var(--blue);
+  background: var(--blue-light);
+  box-shadow: 0 0 0 1px var(--blue), var(--shadow-sm);
+}
+
+.lesson-card h3 {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.3rem;
+  line-height: 1.3;
+}
+
+.lesson-card p {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.lesson-card .pattern-preview {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  background: var(--bg-subtle);
+  color: var(--blue);
+  padding: 0.12rem 0.5rem;
+  border-radius: var(--radius-pill);
+  margin-top: 0.45rem;
+  border: 1px solid var(--border-light);
+  font-weight: 500;
+}
+
+.lesson-card.active .pattern-preview {
+  background: var(--bg);
+  border-color: var(--blue-muted);
+}
+
+
+/* ── Reference grid ────────────────────────────────────────── */
+
+.ref-search {
+  width: 100%;
+  padding: 0.6rem 0.85rem 0.6rem 2.5rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text);
+  background:
+    var(--bg)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239AA0A6' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E")
+    0.85rem center no-repeat;
+  outline: none;
+  transition: all 0.2s ease;
+  margin-bottom: 1.25rem;
+}
+
+.ref-search:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26,115,232,0.12);
+}
+
+.ref-category { margin-bottom: 1.5rem; }
+
+.ref-category h3 {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--blue);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--blue-light);
+}
+
+.ref-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 0.55rem;
+}
+
+.ref-card {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 0.65rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ref-card:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+  box-shadow: var(--shadow-xs);
+  transform: translateY(-1px);
+}
+
+.ref-card .symbol {
+  font-family: var(--font-mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+.ref-card .meaning {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  margin-top: 0.15rem;
+  line-height: 1.4;
+}
+
+
+/* ── Challenge cards ───────────────────────────────────────── */
+
+.challenge-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 0.65rem;
+  transition: all 0.2s ease;
+}
+
+.challenge-card.active-challenge {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 1px var(--blue), var(--shadow-md);
+}
+
+.challenge-card.completed {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+
+.challenge-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.35rem;
+}
+
+.challenge-diff {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.diff-starter      { background: var(--green-light); color: var(--green); }
+.diff-intermediate { background: var(--orange-light); color: #B06D1F; }
+.diff-applied      { background: var(--purple-light); color: var(--purple); }
+
+.challenge-card h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.challenge-card .desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+  line-height: 1.55;
+}
+
+.challenge-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.challenge-status {
+  font-size: 1rem;
+  color: var(--green);
+}
+
+
+/* ── Buttons (pill style) ──────────────────────────────────── */
+
+.btn {
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s ease;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+.btn-primary:hover {
+  background: var(--blue-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-outline {
+  background: none;
+  color: var(--blue);
+  border-color: var(--border);
+}
+.btn-outline:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+
+.btn-check {
+  background: var(--green);
+  color: white;
+  border-color: var(--green);
+}
+.btn-check:hover {
+  background: #1A7A35;
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ── Feedback & hints ──────────────────────────────────────── */
+
+.challenge-feedback {
+  margin-top: 0.55rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: none;
+  line-height: 1.5;
+}
+
+.feedback-success {
+  display: block;
+  background: var(--green-light);
+  color: var(--green);
+  border-left: 3px solid var(--green);
+}
+
+.feedback-tryagain {
+  display: block;
+  background: var(--orange-light);
+  color: #8B5E1A;
+  border-left: 3px solid var(--orange);
+}
+
+.hint-text {
+  margin-top: 0.45rem;
+  padding: 0.5rem 0.8rem;
+  background: var(--purple-light);
+  border-left: 3px solid var(--purple);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.78rem;
+  color: #5B21B6;
+  display: none;
+  line-height: 1.5;
+}
+
+.hint-text.visible { display: block; }
+
+
+/* ── Cheat sheet tables ────────────────────────────────────── */
+
+.cheat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-bottom: 1.4rem;
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--border-light);
+}
+
+.cheat-table th {
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.cheat-table th[colspan] {
+  color: var(--blue);
+  font-size: 0.75rem;
+  background: var(--blue-light);
+}
+
+.cheat-table td {
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+
+.cheat-table tr:last-child td { border-bottom: none; }
+
+.cheat-table code {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--blue);
+  background: var(--blue-light);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.cheat-table .example {
+  color: var(--text-tertiary);
+  font-size: 0.75rem;
+}
+
+
+/* ── NLP callout ───────────────────────────────────────────── */
+
+.nlp-callout {
+  background: var(--orange-light);
+  border: 1px solid #F5DEB3;
+  border-radius: var(--radius-lg);
+  padding: 0.85rem 1rem;
+  margin: 1.25rem 0;
+  font-size: 0.8rem;
+  color: #6B4A14;
+  line-height: 1.55;
+}
+
+.nlp-callout strong { color: #92600E; }
+
+
+/* ── Mobile playground toggle ──────────────────────────────── */
+
+.mobile-pg-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  border: none;
+  font-size: 1.15rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+
+.mobile-pg-toggle:hover { transform: scale(1.08); }
+
+.mobile-pg-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 150;
+  backdrop-filter: blur(2px);
+}
+
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+  .main { grid-template-columns: 1fr; }
+
+  .playground-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 160;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 100vh;
+  }
+
+  .playground-panel.open { transform: translateX(0); }
+  .content-panel         { max-height: none; }
+  .mobile-pg-toggle      { display: flex; }
+}
+
+@media (max-width: 600px) {
+  .header        { padding: 0 1rem; height: 52px; }
+  .header-brand h1 { font-size: 0.95rem; }
+  .mode-tabs     { gap: 0; }
+  .mode-tab      { padding: 0.32rem 0.6rem; font-size: 0.72rem; }
+  .content-panel { padding: 1rem 1.15rem; }
+  .ref-grid      { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); }
+}
+
+
+/* ── Scrollbars (thin, minimal) ────────────────────────────── */
+
+.content-panel::-webkit-scrollbar,
+.playground-panel::-webkit-scrollbar       { width: 5px; }
+.content-panel::-webkit-scrollbar-track    { background: transparent; }
+.playground-panel::-webkit-scrollbar-track { background: transparent; }
+.content-panel::-webkit-scrollbar-thumb    { background: var(--border); border-radius: 10px; }
+.playground-panel::-webkit-scrollbar-thumb { background: #3A3A55; border-radius: 10px; }
+.content-panel::-webkit-scrollbar-thumb:hover    { background: var(--text-tertiary); }
+.playground-panel::-webkit-scrollbar-thumb:hover { background: #555; }
+
+
+/* ── Animations ────────────────────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+  </style>
 </head>
 <body>
 
-  <!-- ════════════════════════════════════════════
-       HEADER
-       ════════════════════════════════════════════ -->
   <header class="header">
     <div class="header-brand">
       <div class="icon">.*</div>
@@ -26,7 +824,6 @@
         <div class="subtitle">AI 102 — Pattern Matching for Text Analysis</div>
       </div>
     </div>
-
     <nav class="mode-tabs">
       <button class="mode-tab active" data-mode="learn">Learn</button>
       <button class="mode-tab" data-mode="reference">Reference</button>
@@ -35,13 +832,7 @@
     </nav>
   </header>
 
-
-  <!-- ════════════════════════════════════════════
-       MAIN SPLIT LAYOUT
-       ════════════════════════════════════════════ -->
   <div class="main">
-
-    <!-- Left: Content (switches with tabs) -->
     <div class="content-panel">
       <div id="panel-learn"      class="panel-section active"></div>
       <div id="panel-reference"  class="panel-section"></div>
@@ -49,22 +840,16 @@
       <div id="panel-cheatsheet" class="panel-section"></div>
     </div>
 
-    <!-- Right: Playground (always visible) -->
     <div class="playground-panel" id="playground">
       <h2>Regex Playground</h2>
-
       <div>
         <div class="pg-label">Pattern</div>
-        <input type="text" class="pg-input" id="pgPattern"
-               value="\w+" spellcheck="false" autocomplete="off">
+        <input type="text" class="pg-input" id="pgPattern" value="\w+" spellcheck="false" autocomplete="off">
       </div>
-
       <div>
         <div class="pg-label">Test Text</div>
-        <textarea class="pg-textarea" id="pgText"
-                  spellcheck="false">Hello World 123</textarea>
+        <textarea class="pg-textarea" id="pgText" spellcheck="false">Hello World 123</textarea>
       </div>
-
       <div>
         <div class="pg-label">Flags</div>
         <div class="flags-row">
@@ -85,7 +870,6 @@
           </label>
         </div>
       </div>
-
       <div>
         <div class="pg-label">Results</div>
         <div class="results-area" id="pgResults">
@@ -93,21 +877,855 @@
         </div>
       </div>
     </div>
-
   </div>
 
-
-  <!-- Mobile playground toggle -->
-  <button class="mobile-pg-toggle" id="mobileToggle"
-          title="Open Playground">&#9654;</button>
+  <button class="mobile-pg-toggle" id="mobileToggle" title="Open Playground">&#9654;</button>
   <div class="mobile-pg-overlay" id="mobileOverlay"></div>
 
+  <script>
+// ═══════════════════════════════════════════════════════════════
+// data.js — All content lives here. Edit lessons, references,
+// and challenges without touching the UI or styling.
+// ═══════════════════════════════════════════════════════════════
 
-  <!-- ════════════════════════════════════════════
-       SCRIPTS  (data first, then logic)
-       ════════════════════════════════════════════ -->
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+const LESSONS = [
+  {
+    group: "Foundations",
+    items: [
+      {
+        id: "intro",
+        title: "What Is Regex?",
+        desc: "A regex is a pattern that describes text you want to find. Instead of searching for exact words, you describe the shape of what you're looking for — like saying \"find anything that looks like a phone number\" instead of searching for one specific number.",
+        pattern: "hello",
+        text: "hello world, say hello again"
+      },
+      {
+        id: "literal",
+        title: "Literal Matching",
+        desc: "The simplest pattern is just the text itself. Searching for 'the' finds every exact occurrence of those three letters. This is case-sensitive: 'the' won't match 'The'.",
+        pattern: "the",
+        text: "the quick brown fox jumps over the lazy dog"
+      },
+      {
+        id: "dot",
+        title: "Wildcard: the Dot",
+        desc: "A dot (.) matches any single character. Think of it as a blank tile in Scrabble — it can be anything. So c.t matches 'cat', 'cut', 'c@t', but not 'coat' (two characters in the middle).",
+        pattern: "c.t",
+        text: "cat cut cot c@t coat"
+      }
+    ]
+  },
+  {
+    group: "Quantifiers",
+    items: [
+      {
+        id: "plus",
+        title: "One or More: +",
+        desc: "The + means \"one or more of the previous thing.\" So a+ finds groups of a's: 'a', 'aa', 'aaa'. It must find at least one.",
+        pattern: "a+",
+        text: "a aa aaa b ba baa"
+      },
+      {
+        id: "star",
+        title: "Zero or More: *",
+        desc: "The * means \"zero or more.\" Unlike +, it also matches if the character isn't there at all. lo*g matches 'lg', 'log', 'loog', etc.",
+        pattern: "lo*g",
+        text: "lg log loog looog"
+      },
+      {
+        id: "question",
+        title: "Optional: ?",
+        desc: "The ? makes the previous character optional (0 or 1 times). colou?r matches both 'color' (American) and 'colour' (British).",
+        pattern: "colou?r",
+        text: "color colour colouur"
+      },
+      {
+        id: "range",
+        title: "Exact Counts: {n,m}",
+        desc: "Curly braces let you be precise. {3} = exactly 3, {2,4} = between 2 and 4, {3,} = 3 or more. Useful for fixed-length data like zip codes.",
+        pattern: "\\d{3,5}",
+        text: "12 123 1234 12345 123456"
+      }
+    ]
+  },
+  {
+    group: "Character Classes",
+    items: [
+      {
+        id: "digits",
+        title: "Digits: \\d",
+        desc: "\\d matches any single digit (0–9). Pair it with + to match whole numbers: \\d+ finds '3', '42', '1000'. Essential for extracting amounts from financial text.",
+        pattern: "\\d+",
+        text: "Invoice #4521: 3 items at $15 each = $45 total"
+      },
+      {
+        id: "words",
+        title: "Word Characters: \\w",
+        desc: "\\w matches letters, digits, and underscores. \\w+ grabs whole words and numbers. In NLP, this is the basis for simple tokenization.",
+        pattern: "\\w+",
+        text: "hello_world test-case item@2 ready!"
+      },
+      {
+        id: "spaces",
+        title: "Whitespace: \\s",
+        desc: "\\s matches spaces, tabs, and newlines. \\s+ finds gaps between words. Useful for cleaning messy text with irregular spacing.",
+        pattern: "\\s+",
+        text: "too    many     spaces   here"
+      },
+      {
+        id: "sets",
+        title: "Custom Sets: [abc]",
+        desc: "[aeiou] matches any single vowel. [a-z] matches any lowercase letter. [0-9] is the same as \\d. You can combine ranges: [a-zA-Z] matches any letter.",
+        pattern: "[aeiou]",
+        text: "hello world"
+      },
+      {
+        id: "negation",
+        title: "Negated Sets: [^abc]",
+        desc: "Adding ^ inside brackets means NOT. [^0-9] matches anything that isn't a digit. [^aeiou] matches consonants and other characters.",
+        pattern: "[^aeiou\\s]",
+        text: "hello world regex"
+      }
+    ]
+  },
+  {
+    group: "Structure & Grouping",
+    items: [
+      {
+        id: "groups",
+        title: "Groups: ()",
+        desc: "Parentheses group parts of a pattern together. (ha)+ matches 'ha', 'haha', 'hahaha' — the whole group repeats, not just the last character.",
+        pattern: "(ha)+",
+        text: "ha haha hahaha"
+      },
+      {
+        id: "or",
+        title: "Alternation: |",
+        desc: "The pipe | means OR. cat|dog matches either word. You can chain multiple options: cat|dog|bird.",
+        pattern: "cat|dog|bird",
+        text: "I have a cat, a dog, and a bird"
+      },
+      {
+        id: "anchors",
+        title: "Anchors: ^ and $",
+        desc: "^ matches the start of the text (or line with multiline flag). $ matches the end. ^Hello ensures 'Hello' is at the very beginning.",
+        pattern: "^Hello",
+        text: "Hello world\nHello there\nSay Hello"
+      },
+      {
+        id: "escape",
+        title: "Escaping: \\",
+        desc: "Characters like . * + ? have special meaning. To match a literal dot, use \\. — the backslash tells regex to treat the next character literally.",
+        pattern: "\\$\\d+\\.\\d{2}",
+        text: "Price: $9.99 and $100.00 total"
+      }
+    ]
+  }
+];
+
+
+// ───────────────────────────────────────────────
+// Reference cards by category
+// ───────────────────────────────────────────────
+
+const REFERENCE = [
+  {
+    cat: "Metacharacters",
+    items: [
+      { sym: ".",   meaning: "Any character (except newline)", pattern: "c.t",     text: "cat cut cot" },
+      { sym: "^",   meaning: "Start of string/line",          pattern: "^Hello",   text: "Hello world" },
+      { sym: "$",   meaning: "End of string/line",            pattern: "world$",   text: "Hello world" },
+      { sym: "|",   meaning: "OR — match either side",        pattern: "cat|dog",  text: "cat and dog" },
+      { sym: "\\",  meaning: "Escape special character",      pattern: "\\.",       text: "3.14 and 2.71" }
+    ]
+  },
+  {
+    cat: "Quantifiers",
+    items: [
+      { sym: "*",     meaning: "Zero or more",            pattern: "lo*g",       text: "lg log loog" },
+      { sym: "+",     meaning: "One or more",             pattern: "a+",         text: "a aa aaa" },
+      { sym: "?",     meaning: "Zero or one (optional)",  pattern: "colou?r",    text: "color colour" },
+      { sym: "{n}",   meaning: "Exactly n times",         pattern: "\\d{3}",     text: "12 123 1234" },
+      { sym: "{n,m}", meaning: "Between n and m times",   pattern: "\\d{2,4}",   text: "1 12 123 1234 12345" },
+      { sym: "{n,}",  meaning: "n or more times",         pattern: "a{2,}",      text: "a aa aaa aaaa" }
+    ]
+  },
+  {
+    cat: "Character Classes",
+    items: [
+      { sym: "\\d", meaning: "Any digit (0–9)",                  pattern: "\\d+",  text: "abc 123 def 456" },
+      { sym: "\\D", meaning: "Any non-digit",                    pattern: "\\D+",  text: "abc 123 def" },
+      { sym: "\\w", meaning: "Word char (letter, digit, _)",     pattern: "\\w+",  text: "hello_123!" },
+      { sym: "\\W", meaning: "Non-word character",               pattern: "\\W+",  text: "hello world!" },
+      { sym: "\\s", meaning: "Whitespace (space, tab, newline)", pattern: "\\s+",  text: "a  b\tc" },
+      { sym: "\\S", meaning: "Non-whitespace",                   pattern: "\\S+",  text: "a  b  c" }
+    ]
+  },
+  {
+    cat: "Sets & Ranges",
+    items: [
+      { sym: "[abc]",   meaning: "Any one of a, b, or c",   pattern: "[aeiou]",  text: "hello world" },
+      { sym: "[a-z]",   meaning: "Any lowercase letter",    pattern: "[a-z]+",   text: "Hello World" },
+      { sym: "[A-Z]",   meaning: "Any uppercase letter",    pattern: "[A-Z]",    text: "Hello World" },
+      { sym: "[0-9]",   meaning: "Any digit (same as \\d)", pattern: "[0-9]+",   text: "abc123" },
+      { sym: "[^abc]",  meaning: "NOT a, b, or c",          pattern: "[^aeiou]", text: "hello" }
+    ]
+  },
+  {
+    cat: "Anchors & Groups",
+    items: [
+      { sym: "(…)",    meaning: "Capture group",                  pattern: "(\\w+)@(\\w+)", text: "user@site" },
+      { sym: "(?=…)",  meaning: "Lookahead (followed by)",        pattern: "\\w+(?=ing)",   text: "running jumping" },
+      { sym: "(?!…)",  meaning: "Negative lookahead",             pattern: "\\d+(?!\\$)",   text: "100$ 200 300$" }
+    ]
+  }
+];
+
+
+// ───────────────────────────────────────────────
+// Challenge exercises (starter → intermediate → applied)
+// ───────────────────────────────────────────────
+
+const CHALLENGES = [
+  // ── Starter ──
+  {
+    id: "c1", diff: "starter",
+    title: "Find All Numbers",
+    desc: "Write a pattern that matches every number in this text.",
+    text: "Order #4521: 3 widgets at $15 each, shipped to 90210",
+    expected: ["4521", "3", "15", "90210"],
+    hints: [
+      "Numbers are made of digits. What shortcut matches a digit?",
+      "\\d matches one digit. How do you match one or more?"
+    ],
+    solution: "\\d+"
+  },
+  {
+    id: "c2", diff: "starter",
+    title: "Extract Words Only",
+    desc: "Match every word (letters only, no numbers or punctuation).",
+    text: "Hello World! Test-123 regex_fun",
+    expected: ["Hello", "World", "Test", "regex", "fun"],
+    hints: [
+      "[a-zA-Z] matches a single letter.",
+      "Add + to match one or more letters in a row."
+    ],
+    solution: "[a-zA-Z]+"
+  },
+  {
+    id: "c3", diff: "starter",
+    title: "Spot the Vowels",
+    desc: "Find every individual vowel character in this sentence.",
+    text: "The quick brown fox jumps over the lazy dog",
+    expected: ["e", "u", "i", "o", "o", "u", "o", "e", "e", "a", "o"],
+    hints: [
+      "Use a character set with [...]",
+      "[aeiou] matches any single vowel."
+    ],
+    solution: "[aeiou]"
+  },
+
+  // ── Intermediate ──
+  {
+    id: "c4", diff: "intermediate",
+    title: "Match Dollar Amounts",
+    desc: "Extract prices like $9.99 or $100.00 from this receipt.",
+    text: "Subtotal: $45.99, Tax: $3.68, Shipping: $5.00, Total: $54.67",
+    expected: ["$45.99", "$3.68", "$5.00", "$54.67"],
+    hints: [
+      "Start with a literal $ (need to escape it: \\$)",
+      "Then digits, a literal dot, and exactly 2 more digits."
+    ],
+    solution: "\\$\\d+\\.\\d{2}"
+  },
+  {
+    id: "c5", diff: "intermediate",
+    title: "Find Email Addresses",
+    desc: "Write a pattern to extract the email addresses from this text.",
+    text: "Contact john.doe@example.com or support@company.org for help",
+    expected: ["john.doe@example.com", "support@company.org"],
+    hints: [
+      "Emails have: something @ something . something",
+      "[\\w.]+ matches word characters and dots. Build from there."
+    ],
+    solution: "[\\w.]+@[\\w]+\\.[a-z]+"
+  },
+  {
+    id: "c6", diff: "intermediate",
+    title: "Match Dates (MM/DD/YYYY)",
+    desc: "Find all dates in month/day/year format.",
+    text: "Filed on 01/15/2024, revised 12/01/2023, due 3/5/2025",
+    expected: ["01/15/2024", "12/01/2023", "3/5/2025"],
+    hints: [
+      "Months and days can be 1 or 2 digits: \\d{1,2}",
+      "Years are 4 digits. Separate with literal slashes."
+    ],
+    solution: "\\d{1,2}/\\d{1,2}/\\d{4}"
+  },
+
+  // ── Applied: Fraud Detection ──
+  {
+    id: "c7", diff: "applied",
+    title: "Structuring Transactions",
+    desc: "Amounts just under $10,000 can signal structuring (splitting deposits to avoid reporting thresholds). Find all amounts between $9,000–$9,999.",
+    text: "Deposit: $9,500 | Deposit: $9,999 | Deposit: $10,000 | Deposit: $9,001 | Deposit: $8,500",
+    expected: ["$9,500", "$9,999", "$9,001"],
+    hints: [
+      "Start with \\$ then the digit 9, then a comma, then 3 digits.",
+      "\\$9,\\d{3} matches $9 followed by comma and exactly 3 digits."
+    ],
+    solution: "\\$9,\\d{3}"
+  },
+  {
+    id: "c8", diff: "applied",
+    title: "Extract IP Addresses",
+    desc: "Find all IP addresses in this server log to identify suspicious login sources.",
+    text: "Login from 192.168.1.1 at 08:30, failed login from 10.0.0.255, alert from 172.16.0.1",
+    expected: ["192.168.1.1", "10.0.0.255", "172.16.0.1"],
+    hints: [
+      "An IP is four groups of 1–3 digits separated by dots.",
+      "\\d{1,3} matches 1–3 digits. Dots must be escaped: \\."
+    ],
+    solution: "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
+  },
+  {
+    id: "c9", diff: "applied",
+    title: "Flag Round-Dollar Transactions",
+    desc: "In fraud analysis, many round-dollar amounts (like $500, $1000) can indicate automated or suspicious activity. Find amounts that end in 00.",
+    text: "Transfers: $500, $1,200, $75, $3,000, $149, $10,000, $250",
+    expected: ["$500", "$1,200", "$3,000", "$10,000"],
+    hints: [
+      "These amounts end with 00. But they might have commas in them too.",
+      "Try matching \\$ then digits/commas ending in 00."
+    ],
+    solution: "\\$[\\d,]*00"
+  }
+];
+
+
+// ───────────────────────────────────────────────
+// Cheat sheet table data
+// ───────────────────────────────────────────────
+
+const CHEATSHEET = [
+  {
+    title: "Metacharacters",
+    rows: [
+      [".",    "Any character except newline",              "c.t → cat, cut"],
+      ["^",    "Start of string (or line with m flag)",     "^Hello → Hello at start"],
+      ["$",    "End of string (or line with m flag)",       "end$ → end at finish"],
+      ["|",    "OR — alternation",                          "a|b → a or b"],
+      ["\\\\", "Escape special character",                  "\\\\. → literal dot"]
+    ]
+  },
+  {
+    title: "Quantifiers",
+    rows: [
+      ["*",     "Zero or more",            "a* → \"\", a, aa, aaa"],
+      ["+",     "One or more",             "a+ → a, aa, aaa"],
+      ["?",     "Zero or one (optional)",  "colou?r → color, colour"],
+      ["{n}",   "Exactly n times",         "\\\\d{3} → 123"],
+      ["{n,m}", "Between n and m times",   "\\\\d{2,4} → 12, 123, 1234"]
+    ]
+  },
+  {
+    title: "Character Classes",
+    rows: [
+      ["\\\\d", "Any digit (0–9)",                  "\\\\d+ → 42, 100"],
+      ["\\\\D", "Any non-digit",                    "\\\\D+ → abc, hello"],
+      ["\\\\w", "Word character (letter, digit, _)", "\\\\w+ → hello_123"],
+      ["\\\\W", "Non-word character",               "\\\\W → !, @, spaces"],
+      ["\\\\s", "Whitespace (space, tab, newline)",  "\\\\s+ → spaces between words"],
+      ["\\\\S", "Non-whitespace",                   "\\\\S+ → words"]
+    ]
+  },
+  {
+    title: "Sets & Ranges",
+    rows: [
+      ["[abc]",    "Any one character in the set",  "[aeiou] → vowels"],
+      ["[a-z]",    "Range: any lowercase letter",   "[a-z]+ → hello"],
+      ["[A-Za-z]", "Any letter (upper or lower)",   "[A-Za-z]+ → Hello"],
+      ["[^abc]",   "Any character NOT in the set",  "[^0-9] → non-digits"]
+    ]
+  },
+  {
+    title: "Anchors & Groups",
+    rows: [
+      ["(…)",    "Capture group — treat as unit",          "(ab)+ → ab, abab"],
+      ["(?:…)",  "Non-capturing group",                    "(?:ab)+ (no capture)"],
+      ["(?=…)",  "Lookahead — followed by",                "\\\\w+(?=ing)"],
+      ["(?!…)",  "Negative lookahead — NOT followed by",   "\\\\d+(?!\\\\$)"]
+    ]
+  }
+];
+  </script>
+  <script>
+// ═══════════════════════════════════════════════════════════════
+// app.js — Application logic. Reads from data.js, writes to DOM.
+// No content or styling lives here.
+// ═══════════════════════════════════════════════════════════════
+
+// ───────────────────────────────────────────────
+// State
+// ───────────────────────────────────────────────
+
+const state = {
+  activeMode: "learn",
+  challengeHints: {},   // { challengeId: hintLevel }
+  challengeStatus: {},  // { challengeId: "success" | "trying" }
+};
+
+
+// ───────────────────────────────────────────────
+// Utilities
+// ───────────────────────────────────────────────
+
+function esc(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function $(sel)  { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+
+// ───────────────────────────────────────────────
+// Playground engine (single instance, always on)
+// ───────────────────────────────────────────────
+
+function getFlags() {
+  let f = "";
+  if ($("#flagG").checked) f += "g";
+  if ($("#flagI").checked) f += "i";
+  if ($("#flagM").checked) f += "m";
+  return f;
+}
+
+function runPlayground() {
+  const pattern = $("#pgPattern").value;
+  const text    = $("#pgText").value;
+  const flags   = getFlags();
+  const el      = $("#pgResults");
+
+  if (!pattern) {
+    el.innerHTML =
+      '<span class="pg-placeholder">Type a pattern to see matches…</span>';
+    return;
+  }
+
+  try {
+    const regex   = new RegExp(pattern, flags);
+    const matches = [];
+    let m;
+
+    if (flags.includes("g")) {
+      while ((m = regex.exec(text)) !== null) {
+        matches.push({ text: m[0], index: m.index });
+        if (m[0].length === 0) regex.lastIndex++;
+      }
+    } else {
+      m = regex.exec(text);
+      if (m) matches.push({ text: m[0], index: m.index });
+    }
+
+    // Highlighted text
+    let hl   = "";
+    let last = 0;
+    matches.forEach(function (match) {
+      hl += esc(text.substring(last, match.index));
+      hl += '<span class="match-hl">' + esc(match.text) + "</span>";
+      last = match.index + match.text.length;
+    });
+    hl += esc(text.substring(last));
+
+    const countCls = matches.length === 0 ? "match-count zero" : "match-count";
+    let html =
+      '<div class="' + countCls + '">' +
+      matches.length + " match" + (matches.length !== 1 ? "es" : "") +
+      "</div>";
+    html += '<div class="highlighted-text">' + hl + "</div>";
+
+    if (matches.length > 0) {
+      html += '<div class="match-badges">';
+      matches.forEach(function (match) {
+        html +=
+          '<span class="match-badge">&quot;' + esc(match.text) + '&quot;</span>';
+      });
+      html += "</div>";
+    }
+
+    el.innerHTML = html;
+  } catch (err) {
+    el.innerHTML = '<div class="pg-error">' + esc(err.message) + "</div>";
+  }
+}
+
+function loadIntoPlayground(pattern, text) {
+  $("#pgPattern").value = pattern;
+  $("#pgText").value    = text;
+  runPlayground();
+
+  // Mobile: open playground panel
+  if (window.innerWidth < 1024) {
+    $("#playground").classList.add("open");
+    $("#mobileOverlay").style.display = "block";
+  }
+}
+
+
+// ───────────────────────────────────────────────
+// Render: Learn mode
+// ───────────────────────────────────────────────
+
+function renderLearn() {
+  let html = "";
+
+  LESSONS.forEach(function (group) {
+    html += '<div class="section-heading">' + group.group + "</div>";
+
+    group.items.forEach(function (lesson) {
+      html +=
+        '<div class="lesson-card" data-lesson="' + lesson.id + '">' +
+          "<h3>" + lesson.title + "</h3>" +
+          "<p>"  + lesson.desc  + "</p>" +
+          '<span class="pattern-preview">' + esc(lesson.pattern) + "</span>" +
+        "</div>";
+    });
+  });
+
+  $("#panel-learn").innerHTML = html;
+
+  // Click delegation
+  $$(".lesson-card").forEach(function (card) {
+    card.addEventListener("click", function () {
+      selectLesson(this.dataset.lesson);
+    });
+  });
+
+  selectLesson("intro");
+}
+
+function selectLesson(id) {
+  $$(".lesson-card").forEach(function (c) { c.classList.remove("active"); });
+  var card = $('[data-lesson="' + id + '"]');
+  if (card) card.classList.add("active");
+
+  LESSONS.forEach(function (g) {
+    g.items.forEach(function (l) {
+      if (l.id === id) loadIntoPlayground(l.pattern, l.text);
+    });
+  });
+}
+
+
+// ───────────────────────────────────────────────
+// Render: Reference mode
+// ───────────────────────────────────────────────
+
+function renderReference() {
+  let html =
+    '<input type="text" class="ref-search" id="refSearch" ' +
+    'placeholder="Search patterns… (e.g. digit, start, group)">';
+
+  REFERENCE.forEach(function (cat) {
+    html += '<div class="ref-category">';
+    html += "<h3>" + cat.cat + "</h3>";
+    html += '<div class="ref-grid">';
+
+    cat.items.forEach(function (item) {
+      var safePattern = item.pattern.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+      var safeText    = item.text.replace(/'/g, "\\'");
+      html +=
+        '<div class="ref-card" ' +
+          'data-search="' + (item.sym + " " + item.meaning).toLowerCase() + '" ' +
+          "data-pattern='" + safePattern + "' " +
+          "data-text='"    + safeText    + "'>" +
+          '<div class="symbol">' + esc(item.sym) + "</div>" +
+          '<div class="meaning">' + item.meaning + "</div>" +
+        "</div>";
+    });
+
+    html += "</div></div>";
+  });
+
+  $("#panel-reference").innerHTML = html;
+
+  // Search filter
+  $("#refSearch").addEventListener("input", function () {
+    var q = this.value.toLowerCase();
+    $$(".ref-card").forEach(function (card) {
+      card.style.display = card.dataset.search.includes(q) ? "" : "none";
+    });
+  });
+
+  // Click to load
+  $$(".ref-card").forEach(function (card) {
+    card.addEventListener("click", function () {
+      loadIntoPlayground(
+        this.dataset.pattern.replace(/\\\\/g, "\\"),
+        this.dataset.text
+      );
+    });
+  });
+}
+
+
+// ───────────────────────────────────────────────
+// Render: Challenge mode
+// ───────────────────────────────────────────────
+
+function renderChallenges() {
+  var groupLabels = {
+    starter:      "Starter",
+    intermediate: "Intermediate",
+    applied:      "Applied — Fraud Detection"
+  };
+
+  let html =
+    '<div class="nlp-callout">' +
+      "<strong>Why regex for NLP?</strong> Regular expressions are the first tool " +
+      "in every text processing pipeline. In forensic accounting and fraud detection, " +
+      "regex helps you extract dollar amounts, flag suspicious patterns, and parse " +
+      "transaction logs automatically." +
+    "</div>";
+
+  Object.keys(groupLabels).forEach(function (diff) {
+    html += '<div class="section-heading">' + groupLabels[diff] + "</div>";
+
+    CHALLENGES.filter(function (c) { return c.diff === diff; })
+      .forEach(function (ch) {
+        var done = state.challengeStatus[ch.id] === "success";
+        html +=
+          '<div class="challenge-card' + (done ? " completed" : "") + '" ' +
+            'id="card-' + ch.id + '">' +
+            '<div class="challenge-header">' +
+              '<span class="challenge-diff diff-' + ch.diff + '">' + ch.diff + "</span>" +
+              (done ? ' <span class="challenge-status">&#10003;</span>' : "") +
+            "</div>" +
+            "<h3>" + ch.title + "</h3>" +
+            '<div class="desc">' + ch.desc + "</div>" +
+            '<div class="challenge-actions">' +
+              '<button class="btn btn-primary" data-action="start"  data-id="' + ch.id + '">Try It</button>' +
+              '<button class="btn btn-outline" data-action="hint"   data-id="' + ch.id + '">Hint</button>' +
+              '<button class="btn btn-check"   data-action="check"  data-id="' + ch.id + '">Check</button>' +
+            "</div>" +
+            '<div class="hint-text" id="hint-' + ch.id + '"></div>' +
+            '<div class="challenge-feedback" id="fb-' + ch.id + '"></div>' +
+          "</div>";
+      });
+  });
+
+  $("#panel-challenge").innerHTML = html;
+
+  // Event delegation for challenge buttons
+  $$("#panel-challenge .btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var id     = this.dataset.id;
+      var action = this.dataset.action;
+      if (action === "start") startChallenge(id);
+      if (action === "hint")  showHint(id);
+      if (action === "check") checkChallenge(id);
+    });
+  });
+}
+
+function findChallenge(id) {
+  return CHALLENGES.find(function (c) { return c.id === id; });
+}
+
+function startChallenge(id) {
+  var ch = findChallenge(id);
+  if (!ch) return;
+
+  loadIntoPlayground("", ch.text);
+  $("#pgPattern").focus();
+
+  $$(".challenge-card").forEach(function (c) {
+    c.classList.remove("active-challenge");
+  });
+  $("#card-" + id).classList.add("active-challenge");
+}
+
+function showHint(id) {
+  var ch = findChallenge(id);
+  if (!ch) return;
+
+  var level = state.challengeHints[id] || 0;
+  var el    = $("#hint-" + id);
+
+  if (level < ch.hints.length) {
+    el.textContent = "Hint " + (level + 1) + ": " + ch.hints[level];
+    el.classList.add("visible");
+    state.challengeHints[id] = level + 1;
+  } else {
+    el.textContent = "Solution: " + ch.solution;
+    el.classList.add("visible");
+  }
+}
+
+function checkChallenge(id) {
+  var ch = findChallenge(id);
+  if (!ch) return;
+
+  var fb      = $("#fb-" + id);
+  var pattern = $("#pgPattern").value;
+  var text    = $("#pgText").value;
+
+  if (!pattern) {
+    fb.className   = "challenge-feedback feedback-tryagain";
+    fb.textContent = "Enter a pattern in the playground first, then click Check.";
+    return;
+  }
+
+  try {
+    var regex = new RegExp(pattern, "g");
+    var found = [];
+    var m;
+    while ((m = regex.exec(text)) !== null) {
+      found.push(m[0]);
+      if (m[0].length === 0) regex.lastIndex++;
+    }
+
+    var expectedSorted = ch.expected.slice().sort();
+    var foundSorted    = found.slice().sort();
+    var isMatch =
+      expectedSorted.length === foundSorted.length &&
+      expectedSorted.every(function (v, i) { return v === foundSorted[i]; });
+
+    if (isMatch) {
+      fb.className   = "challenge-feedback feedback-success";
+      fb.textContent =
+        "Correct! Your pattern matched all " + ch.expected.length + " expected results.";
+      state.challengeStatus[id] = "success";
+      $("#card-" + id).classList.add("completed");
+    } else {
+      fb.className = "challenge-feedback feedback-tryagain";
+      var msg =
+        "Not quite — you found " + found.length +
+        " match" + (found.length !== 1 ? "es" : "") +
+        " but expected " + ch.expected.length + ".";
+      if (found.length > 0) {
+        msg += ' You matched: ' + found.map(function(f){ return '"'+f+'"'; }).join(", ") + ".";
+      }
+      fb.textContent = msg;
+    }
+  } catch (err) {
+    fb.className   = "challenge-feedback feedback-tryagain";
+    fb.textContent = "Pattern error: " + err.message;
+  }
+}
+
+
+// ───────────────────────────────────────────────
+// Render: Cheat Sheet
+// ───────────────────────────────────────────────
+
+function renderCheatSheet() {
+  let html = "";
+
+  CHEATSHEET.forEach(function (section) {
+    html +=
+      '<table class="cheat-table"><thead>' +
+        '<tr><th colspan="3">' + section.title + "</th></tr>" +
+        "<tr><th>Pattern</th><th>Meaning</th><th>Example</th></tr>" +
+      "</thead><tbody>";
+
+    section.rows.forEach(function (row) {
+      html +=
+        "<tr>" +
+          "<td><code>" + row[0] + "</code></td>" +
+          "<td>" + row[1] + "</td>" +
+          '<td class="example">' + row[2] + "</td>" +
+        "</tr>";
+    });
+
+    html += "</tbody></table>";
+  });
+
+  html +=
+    '<div class="nlp-callout">' +
+      "<strong>Regex in your NLP toolkit:</strong> " +
+      "In spaCy, you can use regex patterns to define custom entity recognition rules. " +
+      "NLTK's RegexpTokenizer lets you tokenize text using regex. " +
+      "In scikit-learn, CountVectorizer accepts a custom token_pattern regex. " +
+      "Regex is the foundation of text preprocessing in every NLP pipeline you'll " +
+      "build in this course." +
+    "</div>";
+
+  $("#panel-cheatsheet").innerHTML = html;
+}
+
+
+// ───────────────────────────────────────────────
+// Mode switching
+// ───────────────────────────────────────────────
+
+function switchMode(mode) {
+  state.activeMode = mode;
+
+  $$(".mode-tab").forEach(function (t) { t.classList.remove("active"); });
+  $('[data-mode="' + mode + '"]').classList.add("active");
+
+  $$(".panel-section").forEach(function (p) { p.classList.remove("active"); });
+  $("#panel-" + mode).classList.add("active");
+}
+
+
+// ───────────────────────────────────────────────
+// Mobile playground toggle
+// ───────────────────────────────────────────────
+
+function closeMobilePlayground() {
+  $("#playground").classList.remove("open");
+  $("#mobileOverlay").style.display = "none";
+}
+
+
+// ───────────────────────────────────────────────
+// Initialise everything on DOM ready
+// ───────────────────────────────────────────────
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  // Render all panels
+  renderLearn();
+  renderReference();
+  renderChallenges();
+  renderCheatSheet();
+
+  // Playground live-update listeners
+  ["input", "input", "change", "change", "change"].forEach(function (evt, i) {
+    var ids = ["pgPattern", "pgText", "flagG", "flagI", "flagM"];
+    $("#" + ids[i]).addEventListener(evt, runPlayground);
+  });
+
+  // Tab navigation
+  $$(".mode-tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      switchMode(this.dataset.mode);
+    });
+  });
+
+  // Mobile playground toggle
+  $("#mobileToggle").addEventListener("click", function () {
+    var pg = $("#playground");
+    if (pg.classList.contains("open")) {
+      closeMobilePlayground();
+    } else {
+      pg.classList.add("open");
+      $("#mobileOverlay").style.display = "block";
+    }
+  });
+
+  $("#mobileOverlay").addEventListener("click", closeMobilePlayground);
+
+  // First run
+  runPlayground();
+});
+  </script>
 
 </body>
 </html>
