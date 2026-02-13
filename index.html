@@ -4,307 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Regex Tutorial & Reference</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background: #0f0f1e; 
-            color: #e0e0e0; 
-            font-family: Arial, sans-serif;
-            padding: 0;
-        }
-        
-        .header {
-            background: linear-gradient(135deg, #0f3460 0%, #FF6600 100%);
-            padding: 2rem;
-            text-align: center;
-            color: white;
-            border-bottom: 3px solid #FF6600;
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin: 0 0 0.5rem 0;
-        }
-        
-        .header p {
-            margin: 0;
-            font-size: 1.1rem;
-            color: #e0e0e0;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .section {
-            background: rgba(26,26,46,0.6);
-            border: 2px solid #444;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .section h2 {
-            color: #FF6600;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            font-size: 1.8rem;
-        }
-        
-        .input-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        label {
-            display: block;
-            color: #FF6600;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-        
-        input[type="text"],
-        textarea {
-            width: 100%;
-            padding: 0.7rem;
-            background: #2a2a3e;
-            border: 2px solid #444;
-            color: #e0e0e0;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            box-sizing: border-box;
-        }
-        
-        input[type="text"]:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #FF6600;
-        }
-        
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        
-        .checkbox-group {
-            margin-top: 0.5rem;
-        }
-        
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #b0b0b0;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-        }
-        
-        input[type="checkbox"] {
-            cursor: pointer;
-            accent-color: #FF6600;
-        }
-        
-        .results {
-            background: #1a1a2e;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            border: 1px solid #444;
-        }
-        
-        .error {
-            color: #ff7a7a;
-            background: rgba(220,53,69,0.2);
-            padding: 0.8rem;
-            border-radius: 4px;
-            border-left: 3px solid #dc3545;
-        }
-        
-        .count {
-            background: #FF6600;
-            color: white;
-            padding: 0.5rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 0.8rem;
-        }
-        
-        .highlighted {
-            background: #2a2a3e;
-            padding: 0.8rem;
-            border-radius: 6px;
-            font-family: monospace;
-            line-height: 1.6;
-            word-break: break-all;
-            margin-top: 0.8rem;
-        }
-        
-        .match-highlight {
-            background: linear-gradient(120deg, #FF6600, #FFB84D);
-            color: white;
-            padding: 1px 2px;
-            border-radius: 2px;
-        }
-        
-        .badge {
-            background: #2a2a3e;
-            padding: 0.4rem 0.7rem;
-            border-radius: 4px;
-            border-left: 2px solid #FF6600;
-            font-family: monospace;
-            color: #00ff88;
-            font-size: 0.8rem;
-            display: inline-block;
-            margin-right: 0.5rem;
-            margin-top: 0.5rem;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header class="header">
+    <div class="header">
         <h1>🔍 Regex Tutorial & Reference</h1>
-        <p>Learn and practice regular expressions</p>
-    </header>
+        <p>Learn, explore, and practice regular expressions</p>
+    </div>
 
-    <div class="container">
-        <div class="section">
-            <h2>Interactive Regex Tester</h2>
-            
-            <div class="input-group">
-                <label for="pattern">Regex Pattern:</label>
-                <input 
-                    type="text" 
-                    id="pattern"
-                    placeholder="Enter regex pattern..."
-                    value="\w+"
-                />
-            </div>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('learn')">📚 Learn</button>
+        <button class="tab-btn" onclick="switchTab('reference')">📖 Reference</button>
+        <button class="tab-btn" onclick="switchTab('practice')">✏️ Practice</button>
+        <button class="tab-btn" onclick="switchTab('realworld')">🌍 Real-World</button>
+    </div>
 
-            <div class="input-group">
-                <label for="testText">Test Text:</label>
-                <textarea 
-                    id="testText"
-                    placeholder="Enter text to test..."
-                >Hello World 123</textarea>
-            </div>
-
-            <div class="input-group">
-                <label>Flags:</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="flagG" checked />
-                        Global (g)
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="flagI" />
-                        Case-insensitive (i)
-                    </label>
-                    <label class="checkbox-item">
-                        <input type="checkbox" id="flagM" />
-                        Multiline (m)
-                    </label>
+    <div id="learn" class="mode active">
+        <div class="container">
+            <div class="two-col">
+                <div class="sidebar">
+                    <div class="lesson-list" id="lessonList"></div>
+                </div>
+                <div class="box">
+                    <div id="lessonContent"></div>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div id="reference" class="mode">
+        <div class="container">
+            <div class="box">
+                <h2>Pattern Reference</h2>
+                <div class="pattern-cats" id="patternCats"></div>
+                <div class="grid" id="patternGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="practice" class="mode">
+        <div class="container">
+            <div class="box">
+                <h2>Practice Exercises</h2>
+                <div class="grid" id="practiceGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="realworld" class="mode">
+        <div class="container">
+            <div class="box">
+                <h2>Real-World Patterns</h2>
+                <div class="grid" id="realworldGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="box">
+            <h2>🎮 Playground</h2>
+            <label>Regex Pattern:</label>
+            <input type="text" id="pattern" value="\w+" />
+            
+            <label>Test Text:</label>
+            <textarea id="testText">Hello World 123</textarea>
+            
+            <label>Flags:</label>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="flagG" checked />
+                    <label for="flagG">Global (g)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="flagI" />
+                    <label for="flagI">Case-insensitive (i)</label>
+                </div>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="flagM" />
+                    <label for="flagM">Multiline (m)</label>
+                </div>
+            </div>
+            
             <div class="results">
-                <div id="resultsContent">
+                <div id="results">
                     <div class="count">Found 0 matches</div>
                     <div class="highlighted">Hello World 123</div>
                 </div>
             </div>
         </div>
-
-        <div class="section">
-            <h2>Common Patterns</h2>
-            <p style="color: #b0b0b0; margin-bottom: 1rem;">Click to test:</p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                <button onclick="setPattern('\\\\d+', 'Price: $5.99, $12.50, $100')" style="padding: 0.8rem; background: #2a2a3e; border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600;">📊 Numbers</button>
-                <button onclick="setPattern('\\\\w+', 'Hello World Python_rocks')" style="padding: 0.8rem; background: #2a2a3e; border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600;">📝 Words</button>
-                <button onclick="setPattern('[a-z]+', 'Hello WORLD 123 test')" style="padding: 0.8rem; background: #2a2a3e; border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600;">🔤 Lowercase</button>
-                <button onclick="setPattern('[A-Z]', 'Hello World Test')" style="padding: 0.8rem; background: #2a2a3e; border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600;">🔤 Uppercase</button>
-            </div>
-        </div>
     </div>
 
-    <script>
-        const patternInput = document.getElementById('pattern');
-        const textInput = document.getElementById('testText');
-        const flagGInput = document.getElementById('flagG');
-        const flagIInput = document.getElementById('flagI');
-        const flagMInput = document.getElementById('flagM');
-        const resultsContent = document.getElementById('resultsContent');
-
-        function updateResults() {
-            const pattern = patternInput.value;
-            const text = textInput.value;
-            let flags = '';
-            if (flagGInput.checked) flags += 'g';
-            if (flagIInput.checked) flags += 'i';
-            if (flagMInput.checked) flags += 'm';
-
-            try {
-                const regex = new RegExp(pattern, flags);
-                const matches = [];
-                let match;
-
-                if (flags.includes('g')) {
-                    while ((match = regex.exec(text)) !== null) {
-                        matches.push({ text: match[0], index: match.index });
-                    }
-                } else {
-                    match = regex.exec(text);
-                    if (match) {
-                        matches.push({ text: match[0], index: match.index });
-                    }
-                }
-
-                let highlightedText = text;
-                if (matches.length > 0) {
-                    let offset = 0;
-                    matches.forEach(m => {
-                        const startIdx = m.index + offset;
-                        const before = highlightedText.substring(0, startIdx);
-                        const matched = highlightedText.substring(startIdx, startIdx + m.text.length);
-                        const after = highlightedText.substring(startIdx + m.text.length);
-                        highlightedText = before + '<span class="match-highlight">' + matched + '</span>' + after;
-                        offset += '<span class="match-highlight"></span>'.length;
-                    });
-                }
-
-                let badgesHTML = '';
-                matches.forEach(m => {
-                    badgesHTML += `<div class="badge">"${m.text}"</div>`;
-                });
-
-                resultsContent.innerHTML = `
-                    <div class="count">Found ${matches.length} match${matches.length !== 1 ? 'es' : ''}</div>
-                    <div class="highlighted">${highlightedText}</div>
-                    ${badgesHTML ? '<div style="margin-top: 0.8rem;">' + badgesHTML + '</div>' : ''}
-                `;
-            } catch (err) {
-                resultsContent.innerHTML = `<div class="error">❌ Error: ${err.message}</div>`;
-            }
-        }
-
-        function setPattern(pat, txt) {
-            patternInput.value = pat;
-            textInput.value = txt;
-            updateResults();
-        }
-
-        patternInput.addEventListener('input', updateResults);
-        textInput.addEventListener('input', updateResults);
-        flagGInput.addEventListener('change', updateResults);
-        flagIInput.addEventListener('change', updateResults);
-        flagMInput.addEventListener('change', updateResults);
-
-        // Initial update
-        updateResults();
-    </script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
