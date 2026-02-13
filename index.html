@@ -14,7 +14,7 @@
         .tab-btn { padding: 0.5rem 1rem; background: rgba(255,102,0,0.1); border: 2px solid #444; color: #e0e0e0; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
         .tab-btn.active { background: #FF6600; border-color: #FF6600; color: white; }
         .tab-btn:hover { background: rgba(255,102,0,0.2); }
-        .container { max-width: 1400px; margin: 0 auto; padding: 1rem; }
+        .container { max-width: 1600px; margin: 0 auto; padding: 1rem; }
         .mode { display: none; }
         .mode.active { display: block; }
         .content-box { background: rgba(26,26,46,0.6); border: 2px solid #444; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
@@ -40,16 +40,27 @@
         .card h4 { color: #FF6600; margin: 0 0 0.4rem 0; font-size: 0.9rem; }
         .card p { color: #b0b0b0; font-size: 0.8rem; margin: 0; }
         .card code { font-family: monospace; color: #00ff88; }
-        .learn-layout { display: grid; grid-template-columns: 200px 1fr; gap: 1rem; }
-        .sidebar { display: flex; flex-direction: column; gap: 0.3rem; }
+        
+        .learn-layout { display: grid; grid-template-columns: 180px 1fr 300px; gap: 1rem; }
+        .sidebar { display: flex; flex-direction: column; gap: 0.3rem; height: fit-content; max-height: calc(100vh - 300px); overflow-y: auto; }
         .lesson-btn { width: 100%; padding: 0.5rem; background: rgba(255,102,0,0.1); border: 2px solid #444; color: #e0e0e0; border-radius: 6px; cursor: pointer; text-align: left; font-size: 0.8rem; }
         .lesson-btn.active { background: #FF6600; color: white; border-color: #FF6600; }
         .lesson-btn:hover { background: rgba(255,102,0,0.2); }
         .lesson-content { color: #d0d0d0; font-size: 0.85rem; line-height: 1.5; }
+        
+        .playground-box { height: fit-content; position: sticky; top: 1rem; }
+        .playground-label { display: block; color: #FF6600; font-weight: 600; margin-bottom: 0.2rem; font-size: 0.75rem; }
+        .playground-input { width: 100%; padding: 0.4rem; background: #2a2a3e; border: 2px solid #444; color: #e0e0e0; border-radius: 6px; font-family: monospace; margin-bottom: 0.5rem; box-sizing: border-box; font-size: 0.75rem; }
+        .playground-textarea { width: 100%; padding: 0.4rem; background: #2a2a3e; border: 2px solid #444; color: #e0e0e0; border-radius: 6px; font-family: monospace; margin-bottom: 0.5rem; box-sizing: border-box; font-size: 0.75rem; min-height: 40px; }
+        .playground-input:focus, .playground-textarea:focus { outline: none; border-color: #FF6600; }
+        .playground-checkbox { display: flex; align-items: center; gap: 0.3rem; margin-bottom: 0.3rem; }
+        .playground-checkbox label { margin: 0; }
+        
         .pattern-cats { display: flex; gap: 0.4rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .pattern-cat-btn { padding: 0.4rem 0.7rem; background: rgba(255,102,0,0.1); border: 2px solid #FF6600; color: #FF6600; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.75rem; }
         .pattern-cat-btn.active { background: #FF6600; color: white; }
         .pattern-cat-btn:hover { background: rgba(255,102,0,0.2); }
+        @media (max-width: 1200px) { .learn-layout { grid-template-columns: 150px 1fr 250px; } }
         @media (max-width: 900px) { .learn-layout { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -71,6 +82,29 @@
             <div class="learn-layout">
                 <div class="sidebar" id="lessonList"></div>
                 <div class="content-box" id="lessonContent"></div>
+                <div class="content-box playground-box">
+                    <h2 style="font-size: 1.1rem;">🎮 Try It</h2>
+                    <label class="playground-label">Pattern:</label>
+                    <input type="text" class="playground-input" id="pattern" value="\w+" />
+                    <label class="playground-label">Test:</label>
+                    <textarea class="playground-textarea" id="testText">Hello World 123</textarea>
+                    <label class="playground-label">Flags:</label>
+                    <div style="margin-bottom: 0.6rem;">
+                        <div class="playground-checkbox">
+                            <input type="checkbox" id="flagG" checked />
+                            <label for="flagG" style="margin: 0; font-size: 0.75rem;">Global</label>
+                        </div>
+                        <div class="playground-checkbox">
+                            <input type="checkbox" id="flagI" />
+                            <label for="flagI" style="margin: 0; font-size: 0.75rem;">Case-i</label>
+                        </div>
+                        <div class="playground-checkbox">
+                            <input type="checkbox" id="flagM" />
+                            <label for="flagM" style="margin: 0; font-size: 0.75rem;">Multiline</label>
+                        </div>
+                    </div>
+                    <div class="results" id="results" style="font-size: 0.8rem;"></div>
+                </div>
             </div>
         </div>
 
@@ -80,12 +114,58 @@
                 <div class="pattern-cats" id="patternCats"></div>
                 <div class="grid" id="patternGrid"></div>
             </div>
+            <div class="content-box">
+                <h2>🎮 Live Playground</h2>
+                <label>Pattern:</label>
+                <input type="text" id="pattern2" value="\w+" />
+                <label>Test:</label>
+                <textarea id="testText2">Hello World 123</textarea>
+                <label>Flags:</label>
+                <div style="margin-bottom: 0.6rem;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagG2" checked />
+                        <label for="flagG2">Global</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagI2" />
+                        <label for="flagI2">Case-i</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagM2" />
+                        <label for="flagM2">Multiline</label>
+                    </div>
+                </div>
+                <div class="results" id="results2"></div>
+            </div>
         </div>
 
         <div id="practice" class="mode">
             <div class="content-box">
                 <h2>Practice Exercises</h2>
                 <div class="grid" id="practiceGrid"></div>
+            </div>
+            <div class="content-box">
+                <h2>🎮 Live Playground</h2>
+                <label>Pattern:</label>
+                <input type="text" id="pattern3" value="\w+" />
+                <label>Test:</label>
+                <textarea id="testText3">Hello World 123</textarea>
+                <label>Flags:</label>
+                <div style="margin-bottom: 0.6rem;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagG3" checked />
+                        <label for="flagG3">Global</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagI3" />
+                        <label for="flagI3">Case-i</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagM3" />
+                        <label for="flagM3">Multiline</label>
+                    </div>
+                </div>
+                <div class="results" id="results3"></div>
             </div>
         </div>
 
@@ -94,30 +174,29 @@
                 <h2>Real-World Patterns</h2>
                 <div class="grid" id="realworldGrid"></div>
             </div>
-        </div>
-
-        <div class="content-box">
-            <h2>🎮 Live Playground</h2>
-            <label>Regex Pattern:</label>
-            <input type="text" id="pattern" value="\w+" />
-            <label>Test Text:</label>
-            <textarea id="testText">Hello World 123</textarea>
-            <label>Flags:</label>
-            <div style="margin-bottom: 0.8rem;">
-                <div class="checkbox-item">
-                    <input type="checkbox" id="flagG" checked />
-                    <label for="flagG">Global (g)</label>
+            <div class="content-box">
+                <h2>🎮 Live Playground</h2>
+                <label>Pattern:</label>
+                <input type="text" id="pattern4" value="\w+" />
+                <label>Test:</label>
+                <textarea id="testText4">Hello World 123</textarea>
+                <label>Flags:</label>
+                <div style="margin-bottom: 0.6rem;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagG4" checked />
+                        <label for="flagG4">Global</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagI4" />
+                        <label for="flagI4">Case-i</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="flagM4" />
+                        <label for="flagM4">Multiline</label>
+                    </div>
                 </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="flagI" />
-                    <label for="flagI">Case-insensitive (i)</label>
-                </div>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="flagM" />
-                    <label for="flagM">Multiline (m)</label>
-                </div>
+                <div class="results" id="results4"></div>
             </div>
-            <div class="results" id="results"></div>
         </div>
     </div>
 
@@ -214,13 +293,13 @@
             e.target.classList.add('active');
         }
 
-        function updateResults() {
-            const pattern = document.getElementById('pattern').value;
-            const text = document.getElementById('testText').value;
+        function updateResults(patternId, textId, g, i, m, resultsId) {
+            const pattern = document.getElementById(patternId).value;
+            const text = document.getElementById(textId).value;
             let flags = '';
-            if (document.getElementById('flagG').checked) flags += 'g';
-            if (document.getElementById('flagI').checked) flags += 'i';
-            if (document.getElementById('flagM').checked) flags += 'm';
+            if (document.getElementById(g).checked) flags += 'g';
+            if (document.getElementById(i).checked) flags += 'i';
+            if (document.getElementById(m).checked) flags += 'm';
 
             try {
                 const regex = new RegExp(pattern, flags);
@@ -250,9 +329,9 @@
                 html += '<div class="highlighted">' + highlighted + '</div>';
                 if (badges) html += '<div style="margin-top: 0.4rem;">' + badges + '</div>';
 
-                document.getElementById('results').innerHTML = html;
+                document.getElementById(resultsId).innerHTML = html;
             } catch (err) {
-                document.getElementById('results').innerHTML = '<div class="error">Error: ' + err.message + '</div>';
+                document.getElementById(resultsId).innerHTML = '<div class="error">Error: ' + err.message + '</div>';
             }
         }
 
@@ -263,7 +342,7 @@
             document.getElementById('lessonContent').innerHTML = '<h3>' + lesson.title + '</h3><div class="lesson-content">' + lesson.content + '</div>';
             document.getElementById('pattern').value = lesson.pattern;
             document.getElementById('testText').value = lesson.text;
-            updateResults();
+            updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results');
         }
 
         function loadPatterns(cat) {
@@ -278,9 +357,9 @@
         }
 
         function setTest(pattern, text) {
-            document.getElementById('pattern').value = pattern;
-            document.getElementById('testText').value = text;
-            updateResults();
+            document.getElementById('pattern2').value = pattern;
+            document.getElementById('testText2').value = text;
+            updateResults('pattern2', 'testText2', 'flagG2', 'flagI2', 'flagM2', 'results2');
         }
 
         function initPage() {
@@ -298,27 +377,57 @@
 
             let practiceHTML = '';
             exercises.forEach(ex => {
-                practiceHTML += '<div class="card" onclick="setTest(\'' + ex.pattern.replace(/\\/g, '\\\\') + '\', \'' + ex.text.replace(/'/g, "\\'") + '\')"><h4>' + ex.title + '</h4><p>' + ex.desc + '</p></div>';
+                practiceHTML += '<div class="card" onclick="setTestPractice(\'' + ex.pattern.replace(/\\/g, '\\\\') + '\', \'' + ex.text.replace(/'/g, "\\'") + '\')"><h4>' + ex.title + '</h4><p>' + ex.desc + '</p></div>';
             });
             document.getElementById('practiceGrid').innerHTML = practiceHTML;
 
             let rwHTML = '';
             realWorld.forEach(rw => {
-                rwHTML += '<div class="card" onclick="setTest(\'' + rw.pattern.replace(/\\/g, '\\\\') + '\', \'' + rw.example + '\')"><h4>' + rw.name + '</h4><p><code>' + rw.pattern + '</code></p></div>';
+                rwHTML += '<div class="card" onclick="setTestRW(\'' + rw.pattern.replace(/\\/g, '\\\\') + '\', \'' + rw.example + '\')"><h4>' + rw.name + '</h4><p><code>' + rw.pattern + '</code></p></div>';
             });
             document.getElementById('realworldGrid').innerHTML = rwHTML;
 
             loadLesson('intro');
             loadPatterns('basics');
-            updateResults();
+            updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results');
+        }
+
+        function setTestPractice(pattern, text) {
+            document.getElementById('pattern3').value = pattern;
+            document.getElementById('testText3').value = text;
+            updateResults('pattern3', 'testText3', 'flagG3', 'flagI3', 'flagM3', 'results3');
+        }
+
+        function setTestRW(pattern, text) {
+            document.getElementById('pattern4').value = pattern;
+            document.getElementById('testText4').value = text;
+            updateResults('pattern4', 'testText4', 'flagG4', 'flagI4', 'flagM4', 'results4');
         }
 
         window.addEventListener('load', initPage);
-        document.getElementById('pattern').addEventListener('input', updateResults);
-        document.getElementById('testText').addEventListener('input', updateResults);
-        document.getElementById('flagG').addEventListener('change', updateResults);
-        document.getElementById('flagI').addEventListener('change', updateResults);
-        document.getElementById('flagM').addEventListener('change', updateResults);
+        document.getElementById('pattern').addEventListener('input', () => updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results'));
+        document.getElementById('testText').addEventListener('input', () => updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results'));
+        document.getElementById('flagG').addEventListener('change', () => updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results'));
+        document.getElementById('flagI').addEventListener('change', () => updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results'));
+        document.getElementById('flagM').addEventListener('change', () => updateResults('pattern', 'testText', 'flagG', 'flagI', 'flagM', 'results'));
+        
+        document.getElementById('pattern2').addEventListener('input', () => updateResults('pattern2', 'testText2', 'flagG2', 'flagI2', 'flagM2', 'results2'));
+        document.getElementById('testText2').addEventListener('input', () => updateResults('pattern2', 'testText2', 'flagG2', 'flagI2', 'flagM2', 'results2'));
+        document.getElementById('flagG2').addEventListener('change', () => updateResults('pattern2', 'testText2', 'flagG2', 'flagI2', 'flagM2', 'results2'));
+        document.getElementById('flagI2').addEventListener('change', () => updateResults('pattern2', 'testText2', 'flagG2', 'flagI2', 'flagM2', 'results2'));
+        document.getElementById('flagM2').addEventListener('change', () => updateResults('pattern2', 'testText2', 'flagG2', 'flagI2', 'flagM2', 'results2'));
+
+        document.getElementById('pattern3').addEventListener('input', () => updateResults('pattern3', 'testText3', 'flagG3', 'flagI3', 'flagM3', 'results3'));
+        document.getElementById('testText3').addEventListener('input', () => updateResults('pattern3', 'testText3', 'flagG3', 'flagI3', 'flagM3', 'results3'));
+        document.getElementById('flagG3').addEventListener('change', () => updateResults('pattern3', 'testText3', 'flagG3', 'flagI3', 'flagM3', 'results3'));
+        document.getElementById('flagI3').addEventListener('change', () => updateResults('pattern3', 'testText3', 'flagG3', 'flagI3', 'flagM3', 'results3'));
+        document.getElementById('flagM3').addEventListener('change', () => updateResults('pattern3', 'testText3', 'flagG3', 'flagI3', 'flagM3', 'results3'));
+
+        document.getElementById('pattern4').addEventListener('input', () => updateResults('pattern4', 'testText4', 'flagG4', 'flagI4', 'flagM4', 'results4'));
+        document.getElementById('testText4').addEventListener('input', () => updateResults('pattern4', 'testText4', 'flagG4', 'flagI4', 'flagM4', 'results4'));
+        document.getElementById('flagG4').addEventListener('change', () => updateResults('pattern4', 'testText4', 'flagG4', 'flagI4', 'flagM4', 'results4'));
+        document.getElementById('flagI4').addEventListener('change', () => updateResults('pattern4', 'testText4', 'flagG4', 'flagI4', 'flagM4', 'results4'));
+        document.getElementById('flagM4').addEventListener('change', () => updateResults('pattern4', 'testText4', 'flagG4', 'flagI4', 'flagM4', 'results4'));
     </script>
 </body>
 </html>
