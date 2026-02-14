@@ -806,6 +806,216 @@ body {
 .playground-panel::-webkit-scrollbar-thumb:hover { background: #555; }
 
 
+/* ── Progress bars ──────────────────────────────────────────── */
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-hover);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+
+/* ── Lesson numbers & visited state ────────────────────────── */
+
+.lesson-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.lesson-number {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.lesson-card.visited .lesson-number {
+  background: var(--blue-light);
+  color: var(--blue);
+  border-color: var(--blue-muted);
+}
+
+.lesson-visited-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lesson-visited-dot.show { opacity: 1; }
+
+
+/* ── Python code blocks ────────────────────────────────────── */
+
+.python-toggle {
+  display: inline-block;
+  margin-top: 0.4rem;
+  margin-left: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  vertical-align: middle;
+}
+
+.python-toggle:hover {
+  border-color: #306998;
+  color: #306998;
+  background: #FFF8E1;
+}
+
+.python-toggle.active {
+  background: #306998;
+  color: white;
+  border-color: #306998;
+}
+
+.python-block {
+  display: none;
+  margin-top: 0.6rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #2A2A3E;
+}
+
+.python-block.show { display: block; }
+
+.python-header {
+  background: #306998;
+  color: white;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.7rem;
+}
+
+.python-code {
+  background: var(--bg-code);
+  color: #C8D0E0;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.6;
+  padding: 0.7rem 0.8rem;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+
+/* ── Pattern explainer ─────────────────────────────────────── */
+
+.explainer {
+  background: rgba(15,15,30,0.5);
+  border: 1px solid #2E2E48;
+  border-radius: var(--radius);
+  padding: 0.65rem 0.8rem;
+}
+
+.explainer-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8888A0;
+  margin-bottom: 0.45rem;
+}
+
+.explainer-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.explainer-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-code-surface);
+  border: 1px solid #3A3A55;
+  border-radius: 5px;
+  padding: 0.22rem 0.5rem;
+  transition: border-color 0.15s;
+}
+
+.explainer-token:hover {
+  border-color: var(--blue);
+}
+
+.explainer-sym {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--orange-glow);
+}
+
+.explainer-meaning {
+  font-size: 0.68rem;
+  color: #A0A0B8;
+  font-weight: 500;
+}
+
+
+/* ── Challenge context label in playground ─────────────────── */
+
+.pg-challenge-label {
+  background: var(--blue);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius);
+  margin-bottom: -0.25rem;
+  animation: fadeIn 0.2s ease;
+}
+
+
 /* ── Animations ────────────────────────────────────────────── */
 
 @keyframes fadeIn {
@@ -842,6 +1052,7 @@ body {
 
     <div class="playground-panel" id="playground">
       <h2>Regex Playground</h2>
+      <div class="pg-challenge-label" id="pgChallengeLabel" style="display:none;"></div>
       <div>
         <div class="pg-label">Pattern</div>
         <input type="text" class="pg-input" id="pgPattern" value="\w+" spellcheck="false" autocomplete="off">
@@ -876,6 +1087,7 @@ body {
           <span class="pg-placeholder">Type a pattern to see matches…</span>
         </div>
       </div>
+      <div class="explainer" id="pgExplainer" style="display:none;"></div>
     </div>
   </div>
 
@@ -897,21 +1109,24 @@ const LESSONS = [
         title: "What Is Regex?",
         desc: "A regex is a pattern that describes text you want to find. Instead of searching for exact words, you describe the shape of what you're looking for — like saying \"find anything that looks like a phone number\" instead of searching for one specific number.",
         pattern: "hello",
-        text: "hello world, say hello again"
+        text: "hello world, say hello again",
+        python: "import re\n\ntext = \"hello world, say hello again\"\nmatches = re.findall(r\"hello\", text)\nprint(matches)  # ['hello', 'hello']"
       },
       {
         id: "literal",
         title: "Literal Matching",
         desc: "The simplest pattern is just the text itself. Searching for 'the' finds every exact occurrence of those three letters. This is case-sensitive: 'the' won't match 'The'.",
         pattern: "the",
-        text: "the quick brown fox jumps over the lazy dog"
+        text: "the quick brown fox jumps over the lazy dog",
+        python: "import re\n\ntext = \"the quick brown fox jumps over the lazy dog\"\nmatches = re.findall(r\"the\", text)\nprint(matches)  # ['the', 'the']"
       },
       {
         id: "dot",
         title: "Wildcard: the Dot",
         desc: "A dot (.) matches any single character. Think of it as a blank tile in Scrabble — it can be anything. So c.t matches 'cat', 'cut', 'c@t', but not 'coat' (two characters in the middle).",
         pattern: "c.t",
-        text: "cat cut cot c@t coat"
+        text: "cat cut cot c@t coat",
+        python: "import re\n\ntext = \"cat cut cot c@t coat\"\nmatches = re.findall(r\"c.t\", text)\nprint(matches)  # ['cat', 'cut', 'cot', 'c@t']"
       }
     ]
   },
@@ -923,28 +1138,32 @@ const LESSONS = [
         title: "One or More: +",
         desc: "The + means \"one or more of the previous thing.\" So a+ finds groups of a's: 'a', 'aa', 'aaa'. It must find at least one.",
         pattern: "a+",
-        text: "a aa aaa b ba baa"
+        text: "a aa aaa b ba baa",
+        python: "import re\n\ntext = \"a aa aaa b ba baa\"\nmatches = re.findall(r\"a+\", text)\nprint(matches)  # ['a', 'aa', 'aaa', 'a', 'aa']"
       },
       {
         id: "star",
         title: "Zero or More: *",
         desc: "The * means \"zero or more.\" Unlike +, it also matches if the character isn't there at all. lo*g matches 'lg', 'log', 'loog', etc.",
         pattern: "lo*g",
-        text: "lg log loog looog"
+        text: "lg log loog looog",
+        python: "import re\n\ntext = \"lg log loog looog\"\nmatches = re.findall(r\"lo*g\", text)\nprint(matches)  # ['lg', 'log', 'loog', 'looog']"
       },
       {
         id: "question",
         title: "Optional: ?",
         desc: "The ? makes the previous character optional (0 or 1 times). colou?r matches both 'color' (American) and 'colour' (British).",
         pattern: "colou?r",
-        text: "color colour colouur"
+        text: "color colour colouur",
+        python: "import re\n\ntext = \"color colour colouur\"\nmatches = re.findall(r\"colou?r\", text)\nprint(matches)  # ['color', 'colour']"
       },
       {
         id: "range",
         title: "Exact Counts: {n,m}",
         desc: "Curly braces let you be precise. {3} = exactly 3, {2,4} = between 2 and 4, {3,} = 3 or more. Useful for fixed-length data like zip codes.",
         pattern: "\\d{3,5}",
-        text: "12 123 1234 12345 123456"
+        text: "12 123 1234 12345 123456",
+        python: "import re\n\ntext = \"12 123 1234 12345 123456\"\nmatches = re.findall(r\"\\d{3,5}\", text)\nprint(matches)  # ['123', '1234', '12345', '12345']"
       }
     ]
   },
@@ -956,35 +1175,40 @@ const LESSONS = [
         title: "Digits: \\d",
         desc: "\\d matches any single digit (0–9). Pair it with + to match whole numbers: \\d+ finds '3', '42', '1000'. Essential for extracting amounts from financial text.",
         pattern: "\\d+",
-        text: "Invoice #4521: 3 items at $15 each = $45 total"
+        text: "Invoice #4521: 3 items at $15 each = $45 total",
+        python: "import re\n\ntext = \"Invoice #4521: 3 items at $15 each = $45 total\"\nmatches = re.findall(r\"\\d+\", text)\nprint(matches)  # ['4521', '3', '15', '45']"
       },
       {
         id: "words",
         title: "Word Characters: \\w",
         desc: "\\w matches letters, digits, and underscores. \\w+ grabs whole words and numbers. In NLP, this is the basis for simple tokenization.",
         pattern: "\\w+",
-        text: "hello_world test-case item@2 ready!"
+        text: "hello_world test-case item@2 ready!",
+        python: "import re\n\ntext = \"hello_world test-case item@2 ready!\"\nmatches = re.findall(r\"\\w+\", text)\nprint(matches)\n# ['hello_world', 'test', 'case', 'item', '2', 'ready']"
       },
       {
         id: "spaces",
         title: "Whitespace: \\s",
         desc: "\\s matches spaces, tabs, and newlines. \\s+ finds gaps between words. Useful for cleaning messy text with irregular spacing.",
         pattern: "\\s+",
-        text: "too    many     spaces   here"
+        text: "too    many     spaces   here",
+        python: "import re\n\ntext = \"too    many     spaces   here\"\n# Split on whitespace — a common NLP preprocessing step\ntokens = re.split(r\"\\s+\", text)\nprint(tokens)  # ['too', 'many', 'spaces', 'here']"
       },
       {
         id: "sets",
         title: "Custom Sets: [abc]",
         desc: "[aeiou] matches any single vowel. [a-z] matches any lowercase letter. [0-9] is the same as \\d. You can combine ranges: [a-zA-Z] matches any letter.",
         pattern: "[aeiou]",
-        text: "hello world"
+        text: "hello world",
+        python: "import re\n\ntext = \"hello world\"\nvowels = re.findall(r\"[aeiou]\", text)\nprint(vowels)  # ['e', 'o', 'o']"
       },
       {
         id: "negation",
         title: "Negated Sets: [^abc]",
         desc: "Adding ^ inside brackets means NOT. [^0-9] matches anything that isn't a digit. [^aeiou] matches consonants and other characters.",
         pattern: "[^aeiou\\s]",
-        text: "hello world regex"
+        text: "hello world regex",
+        python: "import re\n\ntext = \"hello world regex\"\nconsonants = re.findall(r\"[^aeiou\\s]\", text)\nprint(consonants)  # ['h', 'l', 'l', 'w', 'r', 'l', 'd', 'r', 'g', 'x']"
       }
     ]
   },
@@ -996,28 +1220,32 @@ const LESSONS = [
         title: "Groups: ()",
         desc: "Parentheses group parts of a pattern together. (ha)+ matches 'ha', 'haha', 'hahaha' — the whole group repeats, not just the last character.",
         pattern: "(ha)+",
-        text: "ha haha hahaha"
+        text: "ha haha hahaha",
+        python: "import re\n\ntext = \"ha haha hahaha\"\n# findall with groups returns the group content\nmatches = re.findall(r\"(ha)+\", text)\nprint(matches)  # ['ha', 'ha', 'ha']\n\n# Use finditer to see full matches\nfor m in re.finditer(r\"(ha)+\", text):\n    print(m.group())  # 'ha', 'haha', 'hahaha'"
       },
       {
         id: "or",
         title: "Alternation: |",
         desc: "The pipe | means OR. cat|dog matches either word. You can chain multiple options: cat|dog|bird.",
         pattern: "cat|dog|bird",
-        text: "I have a cat, a dog, and a bird"
+        text: "I have a cat, a dog, and a bird",
+        python: "import re\n\ntext = \"I have a cat, a dog, and a bird\"\nanimals = re.findall(r\"cat|dog|bird\", text)\nprint(animals)  # ['cat', 'dog', 'bird']"
       },
       {
         id: "anchors",
         title: "Anchors: ^ and $",
         desc: "^ matches the start of the text (or line with multiline flag). $ matches the end. ^Hello ensures 'Hello' is at the very beginning.",
         pattern: "^Hello",
-        text: "Hello world\nHello there\nSay Hello"
+        text: "Hello world\nHello there\nSay Hello",
+        python: "import re\n\ntext = \"Hello world\\nHello there\\nSay Hello\"\n\n# Without MULTILINE — only matches start of string\nprint(re.findall(r\"^Hello\", text))  # ['Hello']\n\n# With MULTILINE — matches start of each line\nprint(re.findall(r\"^Hello\", text, re.MULTILINE))\n# ['Hello', 'Hello']"
       },
       {
         id: "escape",
         title: "Escaping: \\",
         desc: "Characters like . * + ? have special meaning. To match a literal dot, use \\. — the backslash tells regex to treat the next character literally.",
         pattern: "\\$\\d+\\.\\d{2}",
-        text: "Price: $9.99 and $100.00 total"
+        text: "Price: $9.99 and $100.00 total",
+        python: "import re\n\ntext = \"Price: $9.99 and $100.00 total\"\nprices = re.findall(r\"\\$\\d+\\.\\d{2}\", text)\nprint(prices)  # ['$9.99', '$100.00']"
       }
     ]
   }
@@ -1258,6 +1486,59 @@ const CHEATSHEET = [
     ]
   }
 ];
+
+
+// ───────────────────────────────────────────────
+// Pattern explainer — token dictionary
+// Maps regex tokens to plain-English explanations
+// ───────────────────────────────────────────────
+
+const EXPLAIN_TOKENS = [
+  // Escaped shortcuts (must come before single-char rules)
+  { regex: /^\\\$/, label: "\\$",     meaning: "literal dollar sign" },
+  { regex: /^\\\./, label: "\\.",     meaning: "literal dot" },
+  { regex: /^\\\\/, label: "\\\\",   meaning: "literal backslash" },
+  { regex: /^\\d/,  label: "\\d",    meaning: "any digit (0–9)" },
+  { regex: /^\\D/,  label: "\\D",    meaning: "any non-digit" },
+  { regex: /^\\w/,  label: "\\w",    meaning: "any word character (letter, digit, _)" },
+  { regex: /^\\W/,  label: "\\W",    meaning: "any non-word character" },
+  { regex: /^\\s/,  label: "\\s",    meaning: "any whitespace" },
+  { regex: /^\\S/,  label: "\\S",    meaning: "any non-whitespace" },
+  { regex: /^\\b/,  label: "\\b",    meaning: "word boundary" },
+  { regex: /^\\[0-9A-Za-z]/, label: null, meaning: "literal character" },
+
+  // Quantifiers (with range variants first)
+  { regex: /^\{(\d+),(\d+)\}/, label: null, meaning: "between $1 and $2 times", build: function(m){ return { label: "{" + m[1] + "," + m[2] + "}", meaning: "between " + m[1] + " and " + m[2] + " times" }; } },
+  { regex: /^\{(\d+),\}/,      label: null, meaning: null, build: function(m){ return { label: "{" + m[1] + ",}", meaning: m[1] + " or more times" }; } },
+  { regex: /^\{(\d+)\}/,       label: null, meaning: null, build: function(m){ return { label: "{" + m[1] + "}", meaning: "exactly " + m[1] + " times" }; } },
+
+  // Character sets
+  { regex: /^\[([^\]]*)\]/, label: null, meaning: null, build: function(m){
+      var inner = m[1];
+      var neg = inner.charAt(0) === "^";
+      if (neg) inner = inner.substring(1);
+      return { label: "[" + m[1] + "]", meaning: (neg ? "any character NOT in: " : "any one of: ") + inner };
+    }
+  },
+
+  // Groups
+  { regex: /^\((\?\:)/, label: "(?:",  meaning: "non-capturing group start" },
+  { regex: /^\((\?=)/,  label: "(?=",  meaning: "lookahead (followed by…)" },
+  { regex: /^\((\?!)/,  label: "(?!",  meaning: "negative lookahead (NOT followed by…)" },
+  { regex: /^\(/,        label: "(",    meaning: "group start" },
+  { regex: /^\)/,        label: ")",    meaning: "group end" },
+
+  // Anchors & operators
+  { regex: /^\^/, label: "^", meaning: "start of string/line" },
+  { regex: /^\$/, label: "$", meaning: "end of string/line" },
+  { regex: /^\|/, label: "|", meaning: "OR" },
+  { regex: /^\./,  label: ".",  meaning: "any character (except newline)" },
+  { regex: /^\+\?/, label: "+?", meaning: "one or more (lazy)" },
+  { regex: /^\*\?/, label: "*?", meaning: "zero or more (lazy)" },
+  { regex: /^\+/,  label: "+",  meaning: "one or more" },
+  { regex: /^\*/,  label: "*",  meaning: "zero or more" },
+  { regex: /^\?/,  label: "?",  meaning: "optional (0 or 1)" }
+];
   </script>
   <script>
 // ═══════════════════════════════════════════════════════════════
@@ -1271,8 +1552,11 @@ const CHEATSHEET = [
 
 const state = {
   activeMode: "learn",
-  challengeHints: {},   // { challengeId: hintLevel }
-  challengeStatus: {},  // { challengeId: "success" | "trying" }
+  visitedLessons: {},     // { lessonId: true }
+  challengeHints: {},     // { challengeId: hintLevel }
+  challengeStatus: {},    // { challengeId: "success" }
+  activeChallenge: null,  // track which challenge is being worked on
+  pythonVisible: {},      // { lessonId: true }
 };
 
 
@@ -1293,11 +1577,128 @@ function $$(sel) { return document.querySelectorAll(sel); }
 
 
 // ───────────────────────────────────────────────
+// Progress tracking
+// ───────────────────────────────────────────────
+
+function getTotalLessons() {
+  var count = 0;
+  LESSONS.forEach(function(g) { count += g.items.length; });
+  return count;
+}
+
+function getVisitedCount() {
+  return Object.keys(state.visitedLessons).length;
+}
+
+function getCompletedChallenges() {
+  return Object.keys(state.challengeStatus).length;
+}
+
+function updateProgressBars() {
+  // Learn progress
+  var learnBar = $("#learn-progress");
+  if (learnBar) {
+    var total = getTotalLessons();
+    var visited = getVisitedCount();
+    var pct = total > 0 ? Math.round((visited / total) * 100) : 0;
+    learnBar.querySelector(".progress-fill").style.width = pct + "%";
+    learnBar.querySelector(".progress-text").textContent = visited + " / " + total + " explored";
+  }
+
+  // Challenge progress
+  var chalBar = $("#challenge-progress");
+  if (chalBar) {
+    var total = CHALLENGES.length;
+    var done = getCompletedChallenges();
+    var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    chalBar.querySelector(".progress-fill").style.width = pct + "%";
+    chalBar.querySelector(".progress-text").textContent = done + " / " + total + " completed";
+  }
+}
+
+
+// ───────────────────────────────────────────────
+// Pattern explainer
+// ───────────────────────────────────────────────
+
+function explainPattern(pattern) {
+  if (!pattern) return [];
+
+  var tokens = [];
+  var remaining = pattern;
+
+  while (remaining.length > 0) {
+    var matched = false;
+
+    for (var i = 0; i < EXPLAIN_TOKENS.length; i++) {
+      var rule = EXPLAIN_TOKENS[i];
+      var m = remaining.match(rule.regex);
+
+      if (m) {
+        if (rule.build) {
+          var built = rule.build(m);
+          tokens.push({ label: built.label, meaning: built.meaning });
+        } else {
+          tokens.push({
+            label: rule.label || m[0],
+            meaning: rule.meaning || ("literal \"" + m[0] + "\"")
+          });
+        }
+        remaining = remaining.substring(m[0].length);
+        matched = true;
+        break;
+      }
+    }
+
+    // If nothing matched, consume one literal character
+    if (!matched) {
+      var ch = remaining.charAt(0);
+      tokens.push({ label: ch, meaning: 'literal "' + ch + '"' });
+      remaining = remaining.substring(1);
+    }
+  }
+
+  return tokens;
+}
+
+function renderExplainer(pattern) {
+  var el = $("#pgExplainer");
+  if (!el) return;
+
+  if (!pattern) {
+    el.innerHTML = "";
+    el.style.display = "none";
+    return;
+  }
+
+  var tokens = explainPattern(pattern);
+  if (tokens.length === 0) {
+    el.style.display = "none";
+    return;
+  }
+
+  var html = '<div class="explainer-label">Pattern breakdown</div>';
+  html += '<div class="explainer-tokens">';
+  tokens.forEach(function(t) {
+    html +=
+      '<div class="explainer-token">' +
+        '<span class="explainer-sym">' + esc(t.label) + '</span>' +
+        '<span class="explainer-meaning">' + esc(t.meaning) + '</span>' +
+      '</div>';
+  });
+  html += '</div>';
+
+  el.innerHTML = html;
+  el.style.display = "block";
+}
+
+
+// ───────────────────────────────────────────────
 // Playground engine (single instance, always on)
 // ───────────────────────────────────────────────
 
 function getFlags() {
-  let f = "";
+  var f = "";
   if ($("#flagG").checked) f += "g";
   if ($("#flagI").checked) f += "i";
   if ($("#flagM").checked) f += "m";
@@ -1305,10 +1706,13 @@ function getFlags() {
 }
 
 function runPlayground() {
-  const pattern = $("#pgPattern").value;
-  const text    = $("#pgText").value;
-  const flags   = getFlags();
-  const el      = $("#pgResults");
+  var pattern = $("#pgPattern").value;
+  var text    = $("#pgText").value;
+  var flags   = getFlags();
+  var el      = $("#pgResults");
+
+  // Always update explainer
+  renderExplainer(pattern);
 
   if (!pattern) {
     el.innerHTML =
@@ -1317,9 +1721,9 @@ function runPlayground() {
   }
 
   try {
-    const regex   = new RegExp(pattern, flags);
-    const matches = [];
-    let m;
+    var regex   = new RegExp(pattern, flags);
+    var matches = [];
+    var m;
 
     if (flags.includes("g")) {
       while ((m = regex.exec(text)) !== null) {
@@ -1332,8 +1736,8 @@ function runPlayground() {
     }
 
     // Highlighted text
-    let hl   = "";
-    let last = 0;
+    var hl   = "";
+    var last = 0;
     matches.forEach(function (match) {
       hl += esc(text.substring(last, match.index));
       hl += '<span class="match-hl">' + esc(match.text) + "</span>";
@@ -1341,8 +1745,8 @@ function runPlayground() {
     });
     hl += esc(text.substring(last));
 
-    const countCls = matches.length === 0 ? "match-count zero" : "match-count";
-    let html =
+    var countCls = matches.length === 0 ? "match-count zero" : "match-count";
+    var html =
       '<div class="' + countCls + '">' +
       matches.length + " match" + (matches.length !== 1 ? "es" : "") +
       "</div>";
@@ -1381,27 +1785,63 @@ function loadIntoPlayground(pattern, text) {
 // ───────────────────────────────────────────────
 
 function renderLearn() {
-  let html = "";
+  var html = '';
 
+  // Progress bar
+  html += '<div class="progress-bar" id="learn-progress">';
+  html +=   '<div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>';
+  html +=   '<span class="progress-text">0 / ' + getTotalLessons() + ' explored</span>';
+  html += '</div>';
+
+  var lessonNum = 0;
   LESSONS.forEach(function (group) {
     html += '<div class="section-heading">' + group.group + "</div>";
 
     group.items.forEach(function (lesson) {
+      lessonNum++;
+      var visited = state.visitedLessons[lesson.id] ? " visited" : "";
       html +=
-        '<div class="lesson-card" data-lesson="' + lesson.id + '">' +
+        '<div class="lesson-card' + visited + '" data-lesson="' + lesson.id + '">' +
+          '<div class="lesson-top-row">' +
+            '<span class="lesson-number">' + lessonNum + '</span>' +
+            '<span class="lesson-visited-dot' + (visited ? ' show' : '') + '" title="Explored"></span>' +
+          '</div>' +
           "<h3>" + lesson.title + "</h3>" +
           "<p>"  + lesson.desc  + "</p>" +
           '<span class="pattern-preview">' + esc(lesson.pattern) + "</span>" +
+          '<button class="python-toggle" data-pyid="' + lesson.id + '" title="Show Python code">Python</button>' +
+          '<div class="python-block" id="py-' + lesson.id + '">' +
+            '<div class="python-header">Python equivalent</div>' +
+            '<pre class="python-code">' + esc(lesson.python) + '</pre>' +
+          '</div>' +
         "</div>";
     });
   });
 
   $("#panel-learn").innerHTML = html;
 
-  // Click delegation
+  // Click delegation — lesson cards
   $$(".lesson-card").forEach(function (card) {
-    card.addEventListener("click", function () {
+    card.addEventListener("click", function (e) {
+      // Don't trigger if clicking the python toggle
+      if (e.target.classList.contains("python-toggle")) return;
       selectLesson(this.dataset.lesson);
+    });
+  });
+
+  // Python toggle buttons
+  $$(".python-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var id = this.dataset.pyid;
+      var block = $("#py-" + id);
+      if (block.classList.contains("show")) {
+        block.classList.remove("show");
+        this.classList.remove("active");
+      } else {
+        block.classList.add("show");
+        this.classList.add("active");
+      }
     });
   });
 
@@ -1411,8 +1851,20 @@ function renderLearn() {
 function selectLesson(id) {
   $$(".lesson-card").forEach(function (c) { c.classList.remove("active"); });
   var card = $('[data-lesson="' + id + '"]');
-  if (card) card.classList.add("active");
+  if (card) {
+    card.classList.add("active");
 
+    // Mark visited
+    if (!state.visitedLessons[id]) {
+      state.visitedLessons[id] = true;
+      card.classList.add("visited");
+      var dot = card.querySelector(".lesson-visited-dot");
+      if (dot) dot.classList.add("show");
+      updateProgressBars();
+    }
+  }
+
+  // Load into playground
   LESSONS.forEach(function (g) {
     g.items.forEach(function (l) {
       if (l.id === id) loadIntoPlayground(l.pattern, l.text);
@@ -1426,7 +1878,7 @@ function selectLesson(id) {
 // ───────────────────────────────────────────────
 
 function renderReference() {
-  let html =
+  var html =
     '<input type="text" class="ref-search" id="refSearch" ' +
     'placeholder="Search patterns… (e.g. digit, start, group)">';
 
@@ -1484,7 +1936,15 @@ function renderChallenges() {
     applied:      "Applied — Fraud Detection"
   };
 
-  let html =
+  var html = '';
+
+  // Progress bar
+  html += '<div class="progress-bar" id="challenge-progress">';
+  html +=   '<div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>';
+  html +=   '<span class="progress-text">0 / ' + CHALLENGES.length + ' completed</span>';
+  html += '</div>';
+
+  html +=
     '<div class="nlp-callout">' +
       "<strong>Why regex for NLP?</strong> Regular expressions are the first tool " +
       "in every text processing pipeline. In forensic accounting and fraud detection, " +
@@ -1510,7 +1970,7 @@ function renderChallenges() {
             '<div class="challenge-actions">' +
               '<button class="btn btn-primary" data-action="start"  data-id="' + ch.id + '">Try It</button>' +
               '<button class="btn btn-outline" data-action="hint"   data-id="' + ch.id + '">Hint</button>' +
-              '<button class="btn btn-check"   data-action="check"  data-id="' + ch.id + '">Check</button>' +
+              '<button class="btn btn-check"   data-action="check"  data-id="' + ch.id + '">Check Answer</button>' +
             "</div>" +
             '<div class="hint-text" id="hint-' + ch.id + '"></div>' +
             '<div class="challenge-feedback" id="fb-' + ch.id + '"></div>' +
@@ -1540,8 +2000,16 @@ function startChallenge(id) {
   var ch = findChallenge(id);
   if (!ch) return;
 
+  state.activeChallenge = id;
   loadIntoPlayground("", ch.text);
   $("#pgPattern").focus();
+
+  // Update playground label
+  var label = $("#pgChallengeLabel");
+  if (label) {
+    label.textContent = "Working on: " + ch.title;
+    label.style.display = "block";
+  }
 
   $$(".challenge-card").forEach(function (c) {
     c.classList.remove("active-challenge");
@@ -1572,11 +2040,14 @@ function checkChallenge(id) {
 
   var fb      = $("#fb-" + id);
   var pattern = $("#pgPattern").value;
-  var text    = $("#pgText").value;
+
+  // Always validate against the challenge's own text, not whatever
+  // might be in the textarea (student might have edited it).
+  var text = ch.text;
 
   if (!pattern) {
     fb.className   = "challenge-feedback feedback-tryagain";
-    fb.textContent = "Enter a pattern in the playground first, then click Check.";
+    fb.textContent = 'Click "Try It" first, then type your pattern in the playground.';
     return;
   }
 
@@ -1601,14 +2072,30 @@ function checkChallenge(id) {
         "Correct! Your pattern matched all " + ch.expected.length + " expected results.";
       state.challengeStatus[id] = "success";
       $("#card-" + id).classList.add("completed");
+
+      // Add checkmark if not already there
+      var header = $("#card-" + id + " .challenge-header");
+      if (header && !header.querySelector(".challenge-status")) {
+        var span = document.createElement("span");
+        span.className = "challenge-status";
+        span.innerHTML = "&#10003;";
+        header.appendChild(span);
+      }
+
+      updateProgressBars();
     } else {
       fb.className = "challenge-feedback feedback-tryagain";
       var msg =
         "Not quite — you found " + found.length +
         " match" + (found.length !== 1 ? "es" : "") +
-        " but expected " + ch.expected.length + ".";
-      if (found.length > 0) {
-        msg += ' You matched: ' + found.map(function(f){ return '"'+f+'"'; }).join(", ") + ".";
+        ", expected " + ch.expected.length + ".";
+      if (found.length > 0 && found.length <= 8) {
+        msg += " You matched: " + found.map(function(f){ return "\u201C" + f + "\u201D"; }).join(", ") + ".";
+      }
+      if (found.length > ch.expected.length) {
+        msg += " Your pattern is too broad — try being more specific.";
+      } else if (found.length < ch.expected.length) {
+        msg += " Your pattern is too narrow — try matching more cases.";
       }
       fb.textContent = msg;
     }
@@ -1624,7 +2111,7 @@ function checkChallenge(id) {
 // ───────────────────────────────────────────────
 
 function renderCheatSheet() {
-  let html = "";
+  var html = "";
 
   CHEATSHEET.forEach(function (section) {
     html +=
@@ -1671,6 +2158,12 @@ function switchMode(mode) {
 
   $$(".panel-section").forEach(function (p) { p.classList.remove("active"); });
   $("#panel-" + mode).classList.add("active");
+
+  // Clear challenge label when leaving challenges
+  if (mode !== "challenge") {
+    var label = $("#pgChallengeLabel");
+    if (label) label.style.display = "none";
+  }
 }
 
 
@@ -1697,9 +2190,10 @@ document.addEventListener("DOMContentLoaded", function () {
   renderCheatSheet();
 
   // Playground live-update listeners
-  ["input", "input", "change", "change", "change"].forEach(function (evt, i) {
-    var ids = ["pgPattern", "pgText", "flagG", "flagI", "flagM"];
-    $("#" + ids[i]).addEventListener(evt, runPlayground);
+  var pgIds   = ["pgPattern", "pgText", "flagG", "flagI", "flagM"];
+  var pgEvts  = ["input",     "input",  "change","change","change"];
+  pgIds.forEach(function (id, i) {
+    $("#" + id).addEventListener(pgEvts[i], runPlayground);
   });
 
   // Tab navigation
@@ -1721,6 +2215,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#mobileOverlay").addEventListener("click", closeMobilePlayground);
+
+  // Initial progress
+  updateProgressBars();
 
   // First run
   runPlayground();

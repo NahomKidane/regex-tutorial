@@ -9,8 +9,11 @@
 
 const state = {
   activeMode: "learn",
-  challengeHints: {},   // { challengeId: hintLevel }
-  challengeStatus: {},  // { challengeId: "success" | "trying" }
+  visitedLessons: {},     // { lessonId: true }
+  challengeHints: {},     // { challengeId: hintLevel }
+  challengeStatus: {},    // { challengeId: "success" }
+  activeChallenge: null,  // track which challenge is being worked on
+  pythonVisible: {},      // { lessonId: true }
 };
 
 
@@ -31,11 +34,128 @@ function $$(sel) { return document.querySelectorAll(sel); }
 
 
 // ───────────────────────────────────────────────
+// Progress tracking
+// ───────────────────────────────────────────────
+
+function getTotalLessons() {
+  var count = 0;
+  LESSONS.forEach(function(g) { count += g.items.length; });
+  return count;
+}
+
+function getVisitedCount() {
+  return Object.keys(state.visitedLessons).length;
+}
+
+function getCompletedChallenges() {
+  return Object.keys(state.challengeStatus).length;
+}
+
+function updateProgressBars() {
+  // Learn progress
+  var learnBar = $("#learn-progress");
+  if (learnBar) {
+    var total = getTotalLessons();
+    var visited = getVisitedCount();
+    var pct = total > 0 ? Math.round((visited / total) * 100) : 0;
+    learnBar.querySelector(".progress-fill").style.width = pct + "%";
+    learnBar.querySelector(".progress-text").textContent = visited + " / " + total + " explored";
+  }
+
+  // Challenge progress
+  var chalBar = $("#challenge-progress");
+  if (chalBar) {
+    var total = CHALLENGES.length;
+    var done = getCompletedChallenges();
+    var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    chalBar.querySelector(".progress-fill").style.width = pct + "%";
+    chalBar.querySelector(".progress-text").textContent = done + " / " + total + " completed";
+  }
+}
+
+
+// ───────────────────────────────────────────────
+// Pattern explainer
+// ───────────────────────────────────────────────
+
+function explainPattern(pattern) {
+  if (!pattern) return [];
+
+  var tokens = [];
+  var remaining = pattern;
+
+  while (remaining.length > 0) {
+    var matched = false;
+
+    for (var i = 0; i < EXPLAIN_TOKENS.length; i++) {
+      var rule = EXPLAIN_TOKENS[i];
+      var m = remaining.match(rule.regex);
+
+      if (m) {
+        if (rule.build) {
+          var built = rule.build(m);
+          tokens.push({ label: built.label, meaning: built.meaning });
+        } else {
+          tokens.push({
+            label: rule.label || m[0],
+            meaning: rule.meaning || ("literal \"" + m[0] + "\"")
+          });
+        }
+        remaining = remaining.substring(m[0].length);
+        matched = true;
+        break;
+      }
+    }
+
+    // If nothing matched, consume one literal character
+    if (!matched) {
+      var ch = remaining.charAt(0);
+      tokens.push({ label: ch, meaning: 'literal "' + ch + '"' });
+      remaining = remaining.substring(1);
+    }
+  }
+
+  return tokens;
+}
+
+function renderExplainer(pattern) {
+  var el = $("#pgExplainer");
+  if (!el) return;
+
+  if (!pattern) {
+    el.innerHTML = "";
+    el.style.display = "none";
+    return;
+  }
+
+  var tokens = explainPattern(pattern);
+  if (tokens.length === 0) {
+    el.style.display = "none";
+    return;
+  }
+
+  var html = '<div class="explainer-label">Pattern breakdown</div>';
+  html += '<div class="explainer-tokens">';
+  tokens.forEach(function(t) {
+    html +=
+      '<div class="explainer-token">' +
+        '<span class="explainer-sym">' + esc(t.label) + '</span>' +
+        '<span class="explainer-meaning">' + esc(t.meaning) + '</span>' +
+      '</div>';
+  });
+  html += '</div>';
+
+  el.innerHTML = html;
+  el.style.display = "block";
+}
+
+
+// ───────────────────────────────────────────────
 // Playground engine (single instance, always on)
 // ───────────────────────────────────────────────
 
 function getFlags() {
-  let f = "";
+  var f = "";
   if ($("#flagG").checked) f += "g";
   if ($("#flagI").checked) f += "i";
   if ($("#flagM").checked) f += "m";
@@ -43,10 +163,13 @@ function getFlags() {
 }
 
 function runPlayground() {
-  const pattern = $("#pgPattern").value;
-  const text    = $("#pgText").value;
-  const flags   = getFlags();
-  const el      = $("#pgResults");
+  var pattern = $("#pgPattern").value;
+  var text    = $("#pgText").value;
+  var flags   = getFlags();
+  var el      = $("#pgResults");
+
+  // Always update explainer
+  renderExplainer(pattern);
 
   if (!pattern) {
     el.innerHTML =
@@ -55,9 +178,9 @@ function runPlayground() {
   }
 
   try {
-    const regex   = new RegExp(pattern, flags);
-    const matches = [];
-    let m;
+    var regex   = new RegExp(pattern, flags);
+    var matches = [];
+    var m;
 
     if (flags.includes("g")) {
       while ((m = regex.exec(text)) !== null) {
@@ -70,8 +193,8 @@ function runPlayground() {
     }
 
     // Highlighted text
-    let hl   = "";
-    let last = 0;
+    var hl   = "";
+    var last = 0;
     matches.forEach(function (match) {
       hl += esc(text.substring(last, match.index));
       hl += '<span class="match-hl">' + esc(match.text) + "</span>";
@@ -79,8 +202,8 @@ function runPlayground() {
     });
     hl += esc(text.substring(last));
 
-    const countCls = matches.length === 0 ? "match-count zero" : "match-count";
-    let html =
+    var countCls = matches.length === 0 ? "match-count zero" : "match-count";
+    var html =
       '<div class="' + countCls + '">' +
       matches.length + " match" + (matches.length !== 1 ? "es" : "") +
       "</div>";
@@ -119,27 +242,63 @@ function loadIntoPlayground(pattern, text) {
 // ───────────────────────────────────────────────
 
 function renderLearn() {
-  let html = "";
+  var html = '';
 
+  // Progress bar
+  html += '<div class="progress-bar" id="learn-progress">';
+  html +=   '<div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>';
+  html +=   '<span class="progress-text">0 / ' + getTotalLessons() + ' explored</span>';
+  html += '</div>';
+
+  var lessonNum = 0;
   LESSONS.forEach(function (group) {
     html += '<div class="section-heading">' + group.group + "</div>";
 
     group.items.forEach(function (lesson) {
+      lessonNum++;
+      var visited = state.visitedLessons[lesson.id] ? " visited" : "";
       html +=
-        '<div class="lesson-card" data-lesson="' + lesson.id + '">' +
+        '<div class="lesson-card' + visited + '" data-lesson="' + lesson.id + '">' +
+          '<div class="lesson-top-row">' +
+            '<span class="lesson-number">' + lessonNum + '</span>' +
+            '<span class="lesson-visited-dot' + (visited ? ' show' : '') + '" title="Explored"></span>' +
+          '</div>' +
           "<h3>" + lesson.title + "</h3>" +
           "<p>"  + lesson.desc  + "</p>" +
           '<span class="pattern-preview">' + esc(lesson.pattern) + "</span>" +
+          '<button class="python-toggle" data-pyid="' + lesson.id + '" title="Show Python code">Python</button>' +
+          '<div class="python-block" id="py-' + lesson.id + '">' +
+            '<div class="python-header">Python equivalent</div>' +
+            '<pre class="python-code">' + esc(lesson.python) + '</pre>' +
+          '</div>' +
         "</div>";
     });
   });
 
   $("#panel-learn").innerHTML = html;
 
-  // Click delegation
+  // Click delegation — lesson cards
   $$(".lesson-card").forEach(function (card) {
-    card.addEventListener("click", function () {
+    card.addEventListener("click", function (e) {
+      // Don't trigger if clicking the python toggle
+      if (e.target.classList.contains("python-toggle")) return;
       selectLesson(this.dataset.lesson);
+    });
+  });
+
+  // Python toggle buttons
+  $$(".python-toggle").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var id = this.dataset.pyid;
+      var block = $("#py-" + id);
+      if (block.classList.contains("show")) {
+        block.classList.remove("show");
+        this.classList.remove("active");
+      } else {
+        block.classList.add("show");
+        this.classList.add("active");
+      }
     });
   });
 
@@ -149,8 +308,20 @@ function renderLearn() {
 function selectLesson(id) {
   $$(".lesson-card").forEach(function (c) { c.classList.remove("active"); });
   var card = $('[data-lesson="' + id + '"]');
-  if (card) card.classList.add("active");
+  if (card) {
+    card.classList.add("active");
 
+    // Mark visited
+    if (!state.visitedLessons[id]) {
+      state.visitedLessons[id] = true;
+      card.classList.add("visited");
+      var dot = card.querySelector(".lesson-visited-dot");
+      if (dot) dot.classList.add("show");
+      updateProgressBars();
+    }
+  }
+
+  // Load into playground
   LESSONS.forEach(function (g) {
     g.items.forEach(function (l) {
       if (l.id === id) loadIntoPlayground(l.pattern, l.text);
@@ -164,7 +335,7 @@ function selectLesson(id) {
 // ───────────────────────────────────────────────
 
 function renderReference() {
-  let html =
+  var html =
     '<input type="text" class="ref-search" id="refSearch" ' +
     'placeholder="Search patterns… (e.g. digit, start, group)">';
 
@@ -222,7 +393,15 @@ function renderChallenges() {
     applied:      "Applied — Fraud Detection"
   };
 
-  let html =
+  var html = '';
+
+  // Progress bar
+  html += '<div class="progress-bar" id="challenge-progress">';
+  html +=   '<div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>';
+  html +=   '<span class="progress-text">0 / ' + CHALLENGES.length + ' completed</span>';
+  html += '</div>';
+
+  html +=
     '<div class="nlp-callout">' +
       "<strong>Why regex for NLP?</strong> Regular expressions are the first tool " +
       "in every text processing pipeline. In forensic accounting and fraud detection, " +
@@ -248,7 +427,7 @@ function renderChallenges() {
             '<div class="challenge-actions">' +
               '<button class="btn btn-primary" data-action="start"  data-id="' + ch.id + '">Try It</button>' +
               '<button class="btn btn-outline" data-action="hint"   data-id="' + ch.id + '">Hint</button>' +
-              '<button class="btn btn-check"   data-action="check"  data-id="' + ch.id + '">Check</button>' +
+              '<button class="btn btn-check"   data-action="check"  data-id="' + ch.id + '">Check Answer</button>' +
             "</div>" +
             '<div class="hint-text" id="hint-' + ch.id + '"></div>' +
             '<div class="challenge-feedback" id="fb-' + ch.id + '"></div>' +
@@ -278,8 +457,16 @@ function startChallenge(id) {
   var ch = findChallenge(id);
   if (!ch) return;
 
+  state.activeChallenge = id;
   loadIntoPlayground("", ch.text);
   $("#pgPattern").focus();
+
+  // Update playground label
+  var label = $("#pgChallengeLabel");
+  if (label) {
+    label.textContent = "Working on: " + ch.title;
+    label.style.display = "block";
+  }
 
   $$(".challenge-card").forEach(function (c) {
     c.classList.remove("active-challenge");
@@ -310,11 +497,14 @@ function checkChallenge(id) {
 
   var fb      = $("#fb-" + id);
   var pattern = $("#pgPattern").value;
-  var text    = $("#pgText").value;
+
+  // Always validate against the challenge's own text, not whatever
+  // might be in the textarea (student might have edited it).
+  var text = ch.text;
 
   if (!pattern) {
     fb.className   = "challenge-feedback feedback-tryagain";
-    fb.textContent = "Enter a pattern in the playground first, then click Check.";
+    fb.textContent = 'Click "Try It" first, then type your pattern in the playground.';
     return;
   }
 
@@ -339,14 +529,30 @@ function checkChallenge(id) {
         "Correct! Your pattern matched all " + ch.expected.length + " expected results.";
       state.challengeStatus[id] = "success";
       $("#card-" + id).classList.add("completed");
+
+      // Add checkmark if not already there
+      var header = $("#card-" + id + " .challenge-header");
+      if (header && !header.querySelector(".challenge-status")) {
+        var span = document.createElement("span");
+        span.className = "challenge-status";
+        span.innerHTML = "&#10003;";
+        header.appendChild(span);
+      }
+
+      updateProgressBars();
     } else {
       fb.className = "challenge-feedback feedback-tryagain";
       var msg =
         "Not quite — you found " + found.length +
         " match" + (found.length !== 1 ? "es" : "") +
-        " but expected " + ch.expected.length + ".";
-      if (found.length > 0) {
-        msg += ' You matched: ' + found.map(function(f){ return '"'+f+'"'; }).join(", ") + ".";
+        ", expected " + ch.expected.length + ".";
+      if (found.length > 0 && found.length <= 8) {
+        msg += " You matched: " + found.map(function(f){ return "\u201C" + f + "\u201D"; }).join(", ") + ".";
+      }
+      if (found.length > ch.expected.length) {
+        msg += " Your pattern is too broad — try being more specific.";
+      } else if (found.length < ch.expected.length) {
+        msg += " Your pattern is too narrow — try matching more cases.";
       }
       fb.textContent = msg;
     }
@@ -362,7 +568,7 @@ function checkChallenge(id) {
 // ───────────────────────────────────────────────
 
 function renderCheatSheet() {
-  let html = "";
+  var html = "";
 
   CHEATSHEET.forEach(function (section) {
     html +=
@@ -409,6 +615,12 @@ function switchMode(mode) {
 
   $$(".panel-section").forEach(function (p) { p.classList.remove("active"); });
   $("#panel-" + mode).classList.add("active");
+
+  // Clear challenge label when leaving challenges
+  if (mode !== "challenge") {
+    var label = $("#pgChallengeLabel");
+    if (label) label.style.display = "none";
+  }
 }
 
 
@@ -435,9 +647,10 @@ document.addEventListener("DOMContentLoaded", function () {
   renderCheatSheet();
 
   // Playground live-update listeners
-  ["input", "input", "change", "change", "change"].forEach(function (evt, i) {
-    var ids = ["pgPattern", "pgText", "flagG", "flagI", "flagM"];
-    $("#" + ids[i]).addEventListener(evt, runPlayground);
+  var pgIds   = ["pgPattern", "pgText", "flagG", "flagI", "flagM"];
+  var pgEvts  = ["input",     "input",  "change","change","change"];
+  pgIds.forEach(function (id, i) {
+    $("#" + id).addEventListener(pgEvts[i], runPlayground);
   });
 
   // Tab navigation
@@ -459,6 +672,9 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   $("#mobileOverlay").addEventListener("click", closeMobilePlayground);
+
+  // Initial progress
+  updateProgressBars();
 
   // First run
   runPlayground();

@@ -796,6 +796,216 @@ body {
 .playground-panel::-webkit-scrollbar-thumb:hover { background: #555; }
 
 
+/* ── Progress bars ──────────────────────────────────────────── */
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+}
+
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-hover);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--blue);
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+
+/* ── Lesson numbers & visited state ────────────────────────── */
+
+.lesson-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.3rem;
+}
+
+.lesson-number {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.lesson-card.visited .lesson-number {
+  background: var(--blue-light);
+  color: var(--blue);
+  border-color: var(--blue-muted);
+}
+
+.lesson-visited-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--blue);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.lesson-visited-dot.show { opacity: 1; }
+
+
+/* ── Python code blocks ────────────────────────────────────── */
+
+.python-toggle {
+  display: inline-block;
+  margin-top: 0.4rem;
+  margin-left: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  vertical-align: middle;
+}
+
+.python-toggle:hover {
+  border-color: #306998;
+  color: #306998;
+  background: #FFF8E1;
+}
+
+.python-toggle.active {
+  background: #306998;
+  color: white;
+  border-color: #306998;
+}
+
+.python-block {
+  display: none;
+  margin-top: 0.6rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid #2A2A3E;
+}
+
+.python-block.show { display: block; }
+
+.python-header {
+  background: #306998;
+  color: white;
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.7rem;
+}
+
+.python-code {
+  background: var(--bg-code);
+  color: #C8D0E0;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  line-height: 1.6;
+  padding: 0.7rem 0.8rem;
+  margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+
+/* ── Pattern explainer ─────────────────────────────────────── */
+
+.explainer {
+  background: rgba(15,15,30,0.5);
+  border: 1px solid #2E2E48;
+  border-radius: var(--radius);
+  padding: 0.65rem 0.8rem;
+}
+
+.explainer-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8888A0;
+  margin-bottom: 0.45rem;
+}
+
+.explainer-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.explainer-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-code-surface);
+  border: 1px solid #3A3A55;
+  border-radius: 5px;
+  padding: 0.22rem 0.5rem;
+  transition: border-color 0.15s;
+}
+
+.explainer-token:hover {
+  border-color: var(--blue);
+}
+
+.explainer-sym {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--orange-glow);
+}
+
+.explainer-meaning {
+  font-size: 0.68rem;
+  color: #A0A0B8;
+  font-weight: 500;
+}
+
+
+/* ── Challenge context label in playground ─────────────────── */
+
+.pg-challenge-label {
+  background: var(--blue);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.35rem 0.7rem;
+  border-radius: var(--radius);
+  margin-bottom: -0.25rem;
+  animation: fadeIn 0.2s ease;
+}
+
+
 /* ── Animations ────────────────────────────────────────────── */
 
 @keyframes fadeIn {
