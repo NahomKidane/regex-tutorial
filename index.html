@@ -42,79 +42,80 @@
   --playground-w:   520px;
 }
 
-/* ── LIGHT THEME (default) ─────────────────────────────────── */
+/* ── LIGHT THEME: L2 Warm Cream ────────────────────────────── */
 
 [data-theme="light"] {
-  --bg:             #FFFFFF;
-  --bg-subtle:      #F0F0F0;
-  --bg-hover:       #E8E8E8;
+  --bg:             #FAF6F0;
+  --bg-subtle:      #F5F0E8;
+  --bg-hover:       #EDE5D8;
   --bg-card:        #FFFFFF;
   --bg-code:        #1B1B2F;
   --bg-code-surface:#252540;
   --bg-code-border: #3A3A55;
 
-  --text:           #58595B;
-  --text-bold:      #333333;
-  --text-secondary: #6E6F71;
-  --text-tertiary:  #999999;
+  --text:           #4A3D30;
+  --text-bold:      #2E2418;
+  --text-secondary: #6A5A48;
+  --text-tertiary:  #9A8A72;
 
-  --border:         #D5D5D5;
-  --border-light:   #E0E0E0;
+  --border:         #DDD0BE;
+  --border-light:   #E5DBCC;
 
-  --shadow-xs:      0 1px 2px rgba(0,0,0,0.06);
-  --shadow-sm:      0 1px 3px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);
-  --shadow-md:      0 3px 8px rgba(0,0,0,0.12);
-  --shadow-lg:      0 8px 24px rgba(0,0,0,0.14);
+  --shadow-xs:      0 1px 2px rgba(60,40,10,0.06);
+  --shadow-sm:      0 1px 3px rgba(60,40,10,0.10), 0 1px 2px rgba(60,40,10,0.06);
+  --shadow-md:      0 3px 8px rgba(60,40,10,0.10);
+  --shadow-lg:      0 8px 24px rgba(60,40,10,0.12);
 
-  --header-bg:      #FFFFFF;
-  --hint-bg:        #E0F4F7;
-  --hint-color:     #166E7C;
-  --callout-bg:     #FFF3E0;
+  --header-bg:      #FAF6F0;
+  --hint-bg:        #E8F4F0;
+  --hint-color:     #166E6E;
+  --callout-bg:     #FFF8F0;
   --callout-color:  #6B4A14;
-  --callout-border: #FFE0B2;
+  --callout-border: #F0D8B8;
 
   --pg-result-text: #D0D0E0;
 }
 
 /* ── DARK THEME ────────────────────────────────────────────── */
 
+/* ── DARK THEME: Deep Violet (original) ────────────────────── */
+
 [data-theme="dark"] {
-  /* Theme D — High Contrast (warm black) */
-  --bg:             #161616;
-  --bg-subtle:      #111111;
-  --bg-hover:       #222222;
-  --bg-card:        #1A1A1A;
-  --bg-code:        #0C0C0C;
-  --bg-code-surface:#141414;
-  --bg-code-border: #2A2A2A;
+  --bg:             #1A1A2E;
+  --bg-subtle:      #16162A;
+  --bg-hover:       #252542;
+  --bg-card:        #1F1F38;
+  --bg-code:        #111122;
+  --bg-code-surface:#1A1A30;
+  --bg-code-border: #2E2E4A;
 
-  --text:           #CCCCCC;
-  --text-bold:      #FFFFFF;
-  --text-secondary: #B0B0B0;
-  --text-tertiary:  #888888;
+  --text:           #DCDCEC;
+  --text-bold:      #F2F2FA;
+  --text-secondary: #B0B0C8;
+  --text-tertiary:  #8080A0;
 
-  --border:         #2A2A2A;
-  --border-light:   #222222;
+  --border:         #2E2E4A;
+  --border-light:   #252542;
 
-  --shadow-xs:      0 1px 2px rgba(0,0,0,0.3);
-  --shadow-sm:      0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:      0 3px 8px rgba(0,0,0,0.5);
-  --shadow-lg:      0 8px 24px rgba(0,0,0,0.6);
+  --shadow-xs:      0 1px 2px rgba(0,0,0,0.2);
+  --shadow-sm:      0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md:      0 3px 8px rgba(0,0,0,0.35);
+  --shadow-lg:      0 8px 24px rgba(0,0,0,0.4);
 
-  --header-bg:      #111111;
-  --hint-bg:        rgba(33,151,169,0.15);
+  --header-bg:      #1A1A2E;
+  --hint-bg:        rgba(33,151,169,0.14);
   --hint-color:     #66D4E4;
   --callout-bg:     rgba(255,130,0,0.10);
   --callout-color:  #FFB855;
-  --callout-border: rgba(255,130,0,0.25);
+  --callout-border: rgba(255,130,0,0.22);
 
   --orange-light:   rgba(255,130,0,0.12);
   --orange-muted:   rgba(255,130,0,0.22);
-  --green-light:    rgba(46,125,50,0.15);
-  --berry-light:    rgba(141,32,72,0.18);
-  --teal-light:     rgba(33,151,169,0.15);
-  --red-light:      rgba(198,40,40,0.15);
-  --pg-result-text: #E0E0E0;
+  --green-light:    rgba(46,125,50,0.14);
+  --berry-light:    rgba(141,32,72,0.16);
+  --teal-light:     rgba(33,151,169,0.14);
+  --red-light:      rgba(198,40,40,0.14);
+  --pg-result-text: #D8D8F0;
 }
 
 
@@ -218,6 +219,13 @@ body {
 
 /* ── Theme toggle ──────────────────────────────────────────── */
 
+.theme-toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
 .theme-toggle {
   width: 36px;
   height: 36px;
@@ -238,6 +246,18 @@ body {
 .theme-toggle:hover {
   border-color: var(--orange);
   background: var(--orange-light);
+}
+
+.theme-hint {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.theme-toggle-wrap:hover .theme-hint {
+  color: var(--orange);
 }
 
 
@@ -599,7 +619,7 @@ body {
 }
 
 .lesson-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-bold); margin-bottom: 0.25rem; line-height: 1.3; }
-.lesson-card p   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; }
+.lesson-card p   { font-size: 0.9rem; color: var(--text); line-height: 1.6; }
 
 
 .lesson-card .pattern-preview {
@@ -783,6 +803,7 @@ body {
   .mode-tab { padding: 0.3rem 0.55rem; font-size: 0.7rem; }
   .content-panel { padding: 0.9rem 1rem; }
   .ref-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+  .theme-hint { display: none; }
 }
 
 
@@ -796,6 +817,35 @@ body {
 /* ── No-select during drag ─────────────────────────────────── */
 body.dragging { cursor: col-resize !important; user-select: none; }
 body.dragging * { cursor: col-resize !important; }
+
+/* ── Footer ─────────────────────────────────────────────────── */
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.62rem;
+  color: var(--text-tertiary);
+  background: var(--bg-subtle);
+  border-top: 1px solid var(--border-light);
+  text-align: center;
+  flex-wrap: wrap;
+  transition: background 0.25s ease;
+}
+
+.app-footer code {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  background: var(--bg-hover);
+  padding: 0.05rem 0.3rem;
+  border-radius: 3px;
+  color: var(--text-secondary);
+}
+
+.footer-sep { color: var(--border); }
+
 
 /* ── Accordion — collapsible learn sections ────────────────── */
 
@@ -889,9 +939,12 @@ body.dragging * { cursor: col-resize !important; }
       <button class="mode-tab" data-mode="challenge">Challenges</button>
       <button class="mode-tab" data-mode="cheatsheet">Cheat Sheet</button>
     </nav>
-    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark theme">
-      <span class="theme-icon">🌙</span>
-    </button>
+    <div class="theme-toggle-wrap">
+      <button class="theme-toggle" id="themeToggle" title="Toggle light/dark theme">
+        <span class="theme-icon">☀️</span>
+      </button>
+      <span class="theme-hint">Switch theme</span>
+    </div>
   </header>
   <div class="main">
     <div class="content-panel">
@@ -931,6 +984,11 @@ body.dragging * { cursor: col-resize !important; }
   </div>
   <button class="mobile-pg-toggle" id="mobileToggle" title="Open Playground">&#9654;</button>
   <div class="mobile-pg-overlay" id="mobileOverlay"></div>
+  <footer class="app-footer">
+    <span>Built with AI assistance</span>
+    <span class="footer-sep">·</span>
+    <span>Regex engine: JavaScript <code>RegExp</code> — Python equivalents shown in each lesson</span>
+  </footer>
   <script>
 // ═══════════════════════════════════════════════════════════════
 // data.js — All content lives here. Edit lessons, references,
