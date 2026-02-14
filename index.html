@@ -282,7 +282,7 @@ body {
 .panel-section.active  { display: block; animation: fadeIn 0.2s ease; }
 
 .section-heading {
-  font-size: 0.63rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-tertiary);
   text-transform: uppercase;
@@ -686,14 +686,14 @@ body {
 .ref-search {
   width: 100%; padding: 0.55rem 0.8rem 0.55rem 2.3rem;
   border: 1.5px solid var(--border); border-radius: var(--radius-pill);
-  font-family: var(--font-body); font-size: 0.83rem; color: var(--text);
+  font-family: var(--font-body); font-size: 0.92rem; color: var(--text);
   background: var(--bg-card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23999' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85zm-5.242.656a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E") 0.8rem center no-repeat;
   outline: none; transition: all 0.2s ease; margin-bottom: 1.15rem;
 }
 .ref-search:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,130,0,0.10); }
 
 .ref-category { margin-bottom: 1.4rem; }
-.ref-category h3 { font-size: 0.7rem; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.5rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--orange-light); }
+.ref-category h3 { font-size: 0.82rem; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.5rem; padding-bottom: 0.3rem; border-bottom: 2px solid var(--orange-light); }
 .ref-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 0.5rem; }
 
 .ref-card {
@@ -701,8 +701,8 @@ body {
   padding: 0.6rem 0.75rem; cursor: pointer; transition: all 0.15s ease;
 }
 .ref-card:hover { border-color: var(--orange); background: var(--orange-light); box-shadow: var(--shadow-xs); transform: translateY(-1px); }
-.ref-card .symbol  { font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; color: var(--orange); }
-.ref-card .meaning { font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.1rem; line-height: 1.4; }
+.ref-card .symbol  { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 600; color: var(--orange); }
+.ref-card .meaning { font-size: 0.85rem; color: var(--text); margin-top: 0.1rem; line-height: 1.4; }
 
 
 /* ── Challenge cards ───────────────────────────────────────── */
@@ -718,15 +718,15 @@ body {
 .challenge-header { display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.3rem; }
 
 .challenge-diff {
-  font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+  font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
   padding: 0.12rem 0.45rem; border-radius: var(--radius-pill); white-space: nowrap;
 }
 .diff-starter      { background: var(--green-light); color: var(--green); }
 .diff-intermediate { background: var(--orange-light); color: var(--orange-hover); }
 .diff-applied      { background: var(--berry-light); color: var(--berry); }
 
-.challenge-card h3   { font-size: 0.88rem; font-weight: 700; color: var(--text-bold); line-height: 1.3; }
-.challenge-card .desc { font-size: 0.76rem; color: var(--text-secondary); margin-bottom: 0.55rem; line-height: 1.55; }
+.challenge-card h3   { font-size: 1.05rem; font-weight: 700; color: var(--text-bold); line-height: 1.3; }
+.challenge-card .desc { font-size: 0.92rem; color: var(--text); margin-bottom: 0.55rem; line-height: 1.55; }
 .challenge-actions    { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 .challenge-status     { font-size: 1rem; color: var(--green); }
 
@@ -734,8 +734,8 @@ body {
 /* ── Buttons ───────────────────────────────────────────────── */
 
 .btn {
-  padding: 0.38rem 0.8rem; border-radius: var(--radius-pill);
-  font-family: var(--font-body); font-size: 0.73rem; font-weight: 700;
+  padding: 0.45rem 0.95rem; border-radius: var(--radius-pill);
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
   cursor: pointer; border: 1.5px solid transparent; transition: all 0.15s ease;
 }
 .btn-primary { background: var(--orange); color: white; border-color: var(--orange); }
@@ -748,28 +748,28 @@ body {
 
 /* ── Feedback & hints ──────────────────────────────────────── */
 
-.challenge-feedback { margin-top: 0.5rem; padding: 0.5rem 0.75rem; border-radius: var(--radius); font-size: 0.78rem; font-weight: 500; display: none; line-height: 1.5; }
+.challenge-feedback { margin-top: 0.5rem; padding: 0.6rem 0.85rem; border-radius: var(--radius); font-size: 0.88rem; font-weight: 500; display: none; line-height: 1.5; }
 .feedback-success  { display: block; background: var(--green-light); color: var(--green); border-left: 3px solid var(--green); }
 .feedback-tryagain { display: block; background: var(--orange-light); color: var(--callout-color); border-left: 3px solid var(--orange); }
 
-.hint-text { margin-top: 0.4rem; padding: 0.45rem 0.75rem; background: var(--hint-bg); border-left: 3px solid var(--teal); border-radius: 0 var(--radius) var(--radius) 0; font-size: 0.76rem; color: var(--hint-color); display: none; line-height: 1.5; }
+.hint-text { margin-top: 0.4rem; padding: 0.55rem 0.85rem; background: var(--hint-bg); border-left: 3px solid var(--teal); border-radius: 0 var(--radius) var(--radius) 0; font-size: 0.88rem; color: var(--hint-color); display: none; line-height: 1.5; }
 .hint-text.visible { display: block; }
 
 
 /* ── Cheat sheet ───────────────────────────────────────────── */
 
-.cheat-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1.3rem; background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); border: 1px solid var(--border-light); }
-.cheat-table th { text-align: left; padding: 0.45rem 0.7rem; background: var(--bg-subtle); color: var(--text-secondary); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border-light); }
-.cheat-table th[colspan] { color: white; font-size: 0.72rem; background: var(--orange); }
+.cheat-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; margin-bottom: 1.3rem; background: var(--bg-card); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); border: 1px solid var(--border-light); }
+.cheat-table th { text-align: left; padding: 0.5rem 0.8rem; background: var(--bg-subtle); color: var(--text-secondary); font-size: 0.76rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid var(--border-light); }
+.cheat-table th[colspan] { color: white; font-size: 0.82rem; background: var(--orange); }
 .cheat-table td { padding: 0.4rem 0.7rem; border-bottom: 1px solid var(--border-light); vertical-align: top; }
 .cheat-table tr:last-child td { border-bottom: none; }
-.cheat-table code { font-family: var(--font-mono); font-size: 0.8rem; color: var(--orange-hover); background: var(--orange-light); padding: 0.08rem 0.3rem; border-radius: 4px; font-weight: 500; }
+.cheat-table code { font-family: var(--font-mono); font-size: 0.9rem; color: var(--orange-hover); background: var(--orange-light); padding: 0.08rem 0.3rem; border-radius: 4px; font-weight: 500; }
 .cheat-table .example { color: var(--text-tertiary); font-size: 0.73rem; }
 
 .nlp-callout {
   background: var(--callout-bg); border: 1px solid var(--callout-border);
   border-left: 4px solid var(--orange); border-radius: var(--radius-lg);
-  padding: 0.8rem 0.95rem; margin: 1.15rem 0; font-size: 0.78rem;
+  padding: 0.9rem 1.05rem; margin: 1.15rem 0; font-size: 0.9rem;
   color: var(--callout-color); line-height: 1.55;
 }
 .nlp-callout strong { color: var(--orange); }
