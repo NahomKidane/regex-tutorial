@@ -1643,7 +1643,8 @@ function initDragResize() {
   });
   document.addEventListener("mousemove", function(e) {
     if (!dragging) return;
-    var newW = Math.min(700, Math.max(360, startW + (startX - e.clientX)));
+    var maxW = Math.min(700, window.innerWidth - 400);
+    var newW = Math.min(maxW, Math.max(360, startW + (startX - e.clientX)));
     panel.style.width = newW + "px";
   });
   document.addEventListener("mouseup", function() {
