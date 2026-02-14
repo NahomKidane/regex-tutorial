@@ -823,6 +823,140 @@ body {
 body.dragging { cursor: col-resize !important; user-select: none; }
 body.dragging * { cursor: col-resize !important; }
 
+
+
+/* ── English translator (in explainer) ─────────────────────── */
+
+.explainer-english {
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--bg-code-border);
+}
+
+.explainer-sentence {
+  font-size: 0.85rem;
+  color: #E8E8F0;
+  line-height: 1.55;
+  font-style: italic;
+  padding: 0.3rem 0;
+}
+
+
+/* ── Font size slider ──────────────────────────────────────── */
+
+.font-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  margin-right: 0.3rem;
+}
+
+.font-slider-icon {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  cursor: default;
+  user-select: none;
+}
+
+.font-slider-wrap input[type="range"] {
+  width: 65px;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.font-slider-wrap input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--orange);
+  cursor: pointer;
+  border: 2px solid var(--bg-subtle);
+}
+
+.font-slider-wrap input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--orange);
+  cursor: pointer;
+  border: 2px solid var(--bg-subtle);
+}
+
+.font-size-label {
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  min-width: 2.2rem;
+  text-align: center;
+}
+
+
+/* ── Beginner walkthrough overlay ──────────────────────────── */
+
+.walkthrough-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0,0,0,0.75);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.walkthrough-card {
+  background: var(--bg-card);
+  border: 2px solid var(--orange);
+  border-radius: 16px;
+  max-width: 480px;
+  width: 90%;
+  padding: 1.8rem 2rem;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  text-align: center;
+  position: relative;
+}
+
+.wt-step { display: none; }
+.wt-step.active { display: block; }
+
+.wt-step .wt-icon { font-size: 2.2rem; margin-bottom: 0.7rem; display: block; }
+.wt-step h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-bold); margin-bottom: 0.4rem; }
+.wt-step p  { font-size: 0.9rem; color: var(--text); line-height: 1.6; margin-bottom: 0.3rem; }
+.wt-step .wt-detail { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-top: 0.2rem; }
+
+.wt-dots { display: flex; justify-content: center; gap: 0.4rem; margin: 1.2rem 0 0.8rem; }
+.wt-dot  { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: all 0.2s ease; }
+.wt-dot.active { background: var(--orange); transform: scale(1.3); }
+
+.wt-buttons { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+
+.wt-btn {
+  padding: 0.45rem 1.1rem; border-radius: var(--radius-pill);
+  font-family: var(--font-body); font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; border: 1.5px solid transparent; transition: all 0.15s ease;
+}
+.wt-btn-primary { background: var(--orange); color: white; }
+.wt-btn-primary:hover { background: var(--orange-hover); }
+.wt-btn-outline { background: none; color: var(--text-secondary); border-color: var(--border); }
+.wt-btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+
+.wt-skip {
+  position: absolute; top: 0.8rem; right: 1rem;
+  background: none; border: none; color: var(--text-tertiary);
+  font-size: 0.72rem; font-weight: 600; cursor: pointer; font-family: var(--font-body);
+}
+.wt-skip:hover { color: var(--orange); }
+
+@media (max-width: 600px) {
+  .font-slider-wrap { display: none; }
+}
 /* ── Footer ─────────────────────────────────────────────────── */
 
 .app-footer {
@@ -944,6 +1078,12 @@ body.dragging * { cursor: col-resize !important; }
       <button class="mode-tab" data-mode="challenge">Challenges</button>
       <button class="mode-tab" data-mode="cheatsheet">Cheat Sheet</button>
     </nav>
+    <div class="font-slider-wrap">
+      <span class="font-slider-icon">A</span>
+      <input type="range" id="fontSlider" min="80" max="130" value="100" step="5">
+      <span class="font-slider-icon" style="font-size:1rem;">A</span>
+      <span class="font-size-label" id="fontSizeLabel">100%</span>
+    </div>
     <div class="theme-toggle-wrap">
       <button class="theme-toggle" id="themeToggle" title="Toggle light/dark theme">
         <span class="theme-icon">☀️</span>
@@ -982,6 +1122,63 @@ body.dragging * { cursor: col-resize !important; }
   </div>
   <button class="mobile-pg-toggle" id="mobileToggle" title="Open Playground">&#9654;</button>
   <div class="mobile-pg-overlay" id="mobileOverlay"></div>
+
+  <!-- Beginner walkthrough -->
+  <div class="walkthrough-overlay" id="walkthroughOverlay">
+    <div class="walkthrough-card">
+      <button class="wt-skip" id="wtSkip">Skip</button>
+
+      <div class="wt-step active">
+        <span class="wt-icon">👋</span>
+        <h2>Welcome to Regex Workshop!</h2>
+        <p>This tool helps you learn regular expressions — powerful text-search patterns used in Python, data analysis, and fraud detection.</p>
+        <div class="wt-detail">Let's take a quick 30-second tour.</div>
+      </div>
+
+      <div class="wt-step">
+        <span class="wt-icon">📖</span>
+        <h2>Left Panel — Learn</h2>
+        <p>Browse lessons organized by topic. Click any card to load its pattern into the playground.</p>
+        <div class="wt-detail">Each lesson includes a Python code example you can copy into Colab.</div>
+      </div>
+
+      <div class="wt-step">
+        <span class="wt-icon">🧪</span>
+        <h2>Right Panel — Playground</h2>
+        <p>Type any regex pattern and test text to see live matches highlighted instantly.</p>
+        <div class="wt-detail">The "In plain English" translator below the results explains what your pattern does in words.</div>
+      </div>
+
+      <div class="wt-step">
+        <span class="wt-icon">🏆</span>
+        <h2>Challenges</h2>
+        <p>Test your skills with 20 challenges across three difficulty levels — from matching digits to detecting fraud patterns.</p>
+        <div class="wt-detail">Use hints if you get stuck. There's no penalty for trying!</div>
+      </div>
+
+      <div class="wt-step">
+        <span class="wt-icon">⚙️</span>
+        <h2>Customize Your View</h2>
+        <p>Use the <strong>A slider</strong> in the header to adjust text size, and the <strong>theme toggle</strong> to switch between light and dark modes.</p>
+        <div class="wt-detail">You're all set — let's start learning!</div>
+      </div>
+
+      <div class="wt-dots">
+        <span class="wt-dot active"></span>
+        <span class="wt-dot"></span>
+        <span class="wt-dot"></span>
+        <span class="wt-dot"></span>
+        <span class="wt-dot"></span>
+      </div>
+
+      <div class="wt-buttons">
+        <button class="wt-btn wt-btn-outline" id="wtPrev" style="display:none;">Back</button>
+        <button class="wt-btn wt-btn-primary" id="wtNext">Next</button>
+        <button class="wt-btn wt-btn-primary" id="wtDone" style="display:none;">Let's go!</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="app-footer">
     <span>Built with AI assistance</span>
     <span class="footer-sep">·</span>
@@ -1706,7 +1903,14 @@ function renderExplainer(pattern) {
   if (!pattern) { el.innerHTML=""; el.style.display="none"; return; }
   var tokens = explainPattern(pattern);
   if (!tokens.length) { el.style.display="none"; return; }
-  var html = '<div class="explainer-label">Pattern breakdown</div><div class="explainer-tokens">';
+
+  // Build full English sentence
+  var sentence = tokens.map(function(t){ return t.meaning; }).join(", then ");
+  sentence = sentence.charAt(0).toUpperCase() + sentence.substring(1) + ".";
+
+  var html = '<div class="explainer-english"><div class="explainer-label">🔤 In plain English</div>';
+  html += '<div class="explainer-sentence">"Match: '+esc(sentence)+'"</div></div>';
+  html += '<div class="explainer-label">Pattern breakdown</div><div class="explainer-tokens">';
   tokens.forEach(function(t) {
     html += '<div class="explainer-token"><span class="explainer-sym">'+esc(t.label)+'</span><span class="explainer-meaning">'+esc(t.meaning)+'</span></div>';
   });
@@ -2063,11 +2267,78 @@ function closeMobilePlayground(){
 
 
 // ───────────────────────────────────────────────
+// Font size slider
+// ───────────────────────────────────────────────
+
+function initFontSlider() {
+  var slider = $("#fontSlider");
+  var label  = $("#fontSizeLabel");
+  if (!slider || !label) return;
+
+  var saved = null;
+  try { saved = localStorage.getItem("regex-fontsize"); } catch(e){}
+  if (saved) { slider.value = saved; }
+
+  function applySize() {
+    var pct = slider.value;
+    document.documentElement.style.fontSize = pct + "%";
+    label.textContent = pct + "%";
+    try { localStorage.setItem("regex-fontsize", pct); } catch(e){}
+  }
+
+  applySize();
+  slider.addEventListener("input", applySize);
+}
+
+
+// ───────────────────────────────────────────────
+// Beginner walkthrough
+// ───────────────────────────────────────────────
+
+function initWalkthrough() {
+  var seen = false;
+  try { seen = localStorage.getItem("regex-walkthrough-seen"); } catch(e){}
+  if (seen) return;
+
+  var overlay = $("#walkthroughOverlay");
+  if (!overlay) return;
+  overlay.style.display = "flex";
+
+  var steps = $$(".wt-step");
+  var dots  = $$(".wt-dot");
+  var cur = 0;
+
+  function showStep(n) {
+    cur = n;
+    steps.forEach(function(s,i){ s.classList.toggle("active", i===n); });
+    dots.forEach(function(d,i){ d.classList.toggle("active", i===n); });
+    var prev = $("#wtPrev"), next = $("#wtNext"), done = $("#wtDone");
+    if (prev) prev.style.display = n > 0 ? "inline-block" : "none";
+    if (next) next.style.display = n < steps.length-1 ? "inline-block" : "none";
+    if (done) done.style.display = n === steps.length-1 ? "inline-block" : "none";
+  }
+
+  showStep(0);
+
+  var prev = $("#wtPrev"), next = $("#wtNext"), done = $("#wtDone"), skip = $("#wtSkip");
+  if (prev) prev.addEventListener("click", function(){ if(cur>0) showStep(cur-1); });
+  if (next) next.addEventListener("click", function(){ if(cur<steps.length-1) showStep(cur+1); });
+
+  function dismiss() {
+    overlay.style.display = "none";
+    try { localStorage.setItem("regex-walkthrough-seen", "1"); } catch(e){}
+  }
+  if (done) done.addEventListener("click", dismiss);
+  if (skip) skip.addEventListener("click", dismiss);
+}
+
+
+// ───────────────────────────────────────────────
 // Init
 // ───────────────────────────────────────────────
 
 document.addEventListener("DOMContentLoaded", function(){
-  initTheme(); initDragResize();
+  initTheme(); initDragResize(); initFontSlider();
   renderLearn(); renderReference(); renderChallenges(); renderCheatSheet();
 
   ["pgPattern","pgText"].forEach(function(id){$("#"+id).addEventListener("input",runPlayground);});
@@ -2087,6 +2358,7 @@ document.addEventListener("DOMContentLoaded", function(){
   $("#mobileOverlay").addEventListener("click",closeMobilePlayground);
 
   updateProgressBars(); runPlayground();
+  // initWalkthrough();
 });
   </script>
 </body>
