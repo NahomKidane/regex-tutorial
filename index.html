@@ -1478,7 +1478,7 @@ const CHEATSHEET = [
       ["^",    "Start of string (or line with m flag)",     "^Hello → Hello at start"],
       ["$",    "End of string (or line with m flag)",       "end$ → end at finish"],
       ["|",    "OR — alternation",                          "a|b → a or b"],
-      ["\\\\", "Escape special character",                  "\\\\. → literal dot"]
+      ["\\",   "Escape special character",                  "\\. → literal dot"]
     ]
   },
   {
@@ -1487,23 +1487,23 @@ const CHEATSHEET = [
       ["*",     "Zero or more",            "a* → \"\", a, aa, aaa"],
       ["+",     "One or more",             "a+ → a, aa, aaa"],
       ["?",     "Zero or one (optional)",  "colou?r → color, colour"],
-      ["{n}",   "Exactly n times",         "\\\\d{3} → 123"],
-      ["{n,m}", "Between n and m times",   "\\\\d{2,4} → 12, 123, 1234"],
+      ["{n}",   "Exactly n times",         "\\d{3} → 123"],
+      ["{n,m}", "Between n and m times",   "\\d{2,4} → 12, 123, 1234"],
       ["{n,}",  "n or more times",         "a{2,} → aa, aaa, aaaa"]
     ]
   },
   {
     title: "Character Classes",
     rows: [
-      ["\\\\d", "Any digit (0–9)",                  "\\\\d+ → 42, 100"],
-      ["\\\\D", "Any non-digit",                    "\\\\D+ → abc, hello"],
-      ["\\\\w", "Word character (letter, digit, _)", "\\\\w+ → hello_123"],
-      ["\\\\W", "Non-word character",               "\\\\W → !, @, spaces"],
-      ["\\\\s", "Whitespace (space, tab, newline)",  "\\\\s+ → spaces between words"],
-      ["\\\\S", "Non-whitespace",                   "\\\\S+ → words"],
-      ["\\\\t", "Tab character explicitly",          "col1\\\\tcol2"],
-      ["\\\\n", "Newline character explicitly",      "line1\\\\nline2"],
-      ["\\\\b", "Word boundary",                     "\\\\bcat\\\\b → cat (not catalog)"]
+      ["\\d", "Any digit (0–9)",                  "\\d+ → 42, 100"],
+      ["\\D", "Any non-digit",                    "\\D+ → abc, hello"],
+      ["\\w", "Word character (letter, digit, _)", "\\w+ → hello_123"],
+      ["\\W", "Non-word character",               "\\W → !, @, spaces"],
+      ["\\s", "Whitespace (space, tab, newline)",  "\\s+ → spaces between words"],
+      ["\\S", "Non-whitespace",                   "\\S+ → words"],
+      ["\\t", "Tab character explicitly",          "col1\\tcol2"],
+      ["\\n", "Newline character explicitly",      "line1\\nline2"],
+      ["\\b", "Word boundary",                     "\\bcat\\b → cat (not catalog)"]
     ]
   },
   {
@@ -1520,8 +1520,8 @@ const CHEATSHEET = [
     rows: [
       ["(…)",    "Capture group — treat as unit",          "(ab)+ → ab, abab"],
       ["(?:…)",  "Non-capturing group",                    "(?:ab)+ (no capture)"],
-      ["(?=…)",  "Lookahead — followed by",                "\\\\w+(?=ing)"],
-      ["(?!…)",  "Negative lookahead — NOT followed by",   "\\\\d+(?!\\\\$)"]
+      ["(?=…)",  "Lookahead — followed by",                "\\w+(?=ing)"],
+      ["(?!…)",  "Negative lookahead — NOT followed by",   "\\d+(?!\\$)"]
     ]
   }
 ];
