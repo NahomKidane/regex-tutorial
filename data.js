@@ -186,28 +186,32 @@ const REFERENCE = [
     items: [
       { sym: "\\d", meaning: "Any digit (0–9)",                  pattern: "\\d+",  text: "abc 123 def 456" },
       { sym: "\\D", meaning: "Any non-digit",                    pattern: "\\D+",  text: "abc 123 def" },
-      { sym: "\\w", meaning: "Word char (letter, digit, _)",     pattern: "\\w+",  text: "hello_123!" },
+      { sym: "\\w", meaning: "Word character (letter, digit, _)", pattern: "\\w+",  text: "hello_123!" },
       { sym: "\\W", meaning: "Non-word character",               pattern: "\\W+",  text: "hello world!" },
       { sym: "\\s", meaning: "Whitespace (space, tab, newline)", pattern: "\\s+",  text: "a  b\tc" },
-      { sym: "\\S", meaning: "Non-whitespace",                   pattern: "\\S+",  text: "a  b  c" }
+      { sym: "\\S", meaning: "Non-whitespace",                   pattern: "\\S+",  text: "a  b  c" },
+      { sym: "\\t", meaning: "Tab character explicitly",         pattern: "\\t",   text: "col1\tcol2\tcol3" },
+      { sym: "\\n", meaning: "Newline character explicitly",     pattern: "\\n",   text: "line1\nline2\nline3" },
+      { sym: "\\b", meaning: "Word boundary (between word and non-word)", pattern: "\\bcat\\b", text: "cat catalog catfish the cat sat" }
     ]
   },
   {
     cat: "Sets & Ranges",
     items: [
-      { sym: "[abc]",   meaning: "Any one of a, b, or c",   pattern: "[aeiou]",  text: "hello world" },
-      { sym: "[a-z]",   meaning: "Any lowercase letter",    pattern: "[a-z]+",   text: "Hello World" },
-      { sym: "[A-Z]",   meaning: "Any uppercase letter",    pattern: "[A-Z]",    text: "Hello World" },
-      { sym: "[0-9]",   meaning: "Any digit (same as \\d)", pattern: "[0-9]+",   text: "abc123" },
-      { sym: "[^abc]",  meaning: "NOT a, b, or c",          pattern: "[^aeiou]", text: "hello" }
+      { sym: "[abc]",   meaning: "Any one character in the set",  pattern: "[aeiou]",  text: "hello world" },
+      { sym: "[a-z]",   meaning: "Range: any lowercase letter",   pattern: "[a-z]+",   text: "Hello World" },
+      { sym: "[A-Z]",   meaning: "Any uppercase letter",          pattern: "[A-Z]",    text: "Hello World" },
+      { sym: "[0-9]",   meaning: "Any digit (same as \\d)",       pattern: "[0-9]+",   text: "abc123" },
+      { sym: "[^abc]",  meaning: "Any character NOT in the set",  pattern: "[^aeiou]", text: "hello" }
     ]
   },
   {
     cat: "Anchors & Groups",
     items: [
-      { sym: "(…)",    meaning: "Capture group",                  pattern: "(\\w+)@(\\w+)", text: "user@site" },
-      { sym: "(?=…)",  meaning: "Lookahead (followed by)",        pattern: "\\w+(?=ing)",   text: "running jumping" },
-      { sym: "(?!…)",  meaning: "Negative lookahead",             pattern: "\\d+(?!\\$)",   text: "100$ 200 300$" }
+      { sym: "(…)",    meaning: "Capture group — treat as unit",          pattern: "(\\w+)@(\\w+)", text: "user@site" },
+      { sym: "(?:…)",  meaning: "Non-capturing group",                    pattern: "(?:ab)+",       text: "ab abab ababab" },
+      { sym: "(?=…)",  meaning: "Lookahead (followed by)",                pattern: "\\w+(?=ing)",   text: "running jumping" },
+      { sym: "(?!…)",  meaning: "Negative lookahead — NOT followed by",   pattern: "\\d+(?!\\$)",   text: "100$ 200 300$" }
     ]
   }
 ];
@@ -255,10 +259,34 @@ const CHALLENGES = [
     ],
     solution: "[aeiou]"
   },
+  {
+    id: "c4", diff: "starter",
+    title: "Find Capitalized Words",
+    desc: "Match words that start with an uppercase letter.",
+    text: "The Bank of America processed three Transfers for John Smith",
+    expected: ["The", "Bank", "America", "Transfers", "John", "Smith"],
+    hints: [
+      "Uppercase starts with [A-Z], followed by lowercase letters.",
+      "[A-Z][a-z]* matches a capital letter followed by zero or more lowercase."
+    ],
+    solution: "[A-Z][a-z]*"
+  },
+  {
+    id: "c5", diff: "starter",
+    title: "Match Three-Letter Words",
+    desc: "Find all words that are exactly three letters long.",
+    text: "The big red fox ran far and hid for two hrs",
+    expected: ["The", "big", "red", "fox", "ran", "far", "and", "hid", "for", "two", "hrs"],
+    hints: [
+      "You need a word boundary \\b to avoid matching inside longer words.",
+      "\\b[a-zA-Z]{3}\\b matches exactly three letters between boundaries."
+    ],
+    solution: "\\b[a-zA-Z]{3}\\b"
+  },
 
   // ── Intermediate ──
   {
-    id: "c4", diff: "intermediate",
+    id: "c6", diff: "intermediate",
     title: "Match Dollar Amounts",
     desc: "Extract prices like $9.99 or $100.00 from this receipt.",
     text: "Subtotal: $45.99, Tax: $3.68, Shipping: $5.00, Total: $54.67",
@@ -270,7 +298,7 @@ const CHALLENGES = [
     solution: "\\$\\d+\\.\\d{2}"
   },
   {
-    id: "c5", diff: "intermediate",
+    id: "c7", diff: "intermediate",
     title: "Find Email Addresses",
     desc: "Write a pattern to extract the email addresses from this text.",
     text: "Contact john.doe@example.com or support@company.org for help",
@@ -282,7 +310,7 @@ const CHALLENGES = [
     solution: "[\\w.]+@[\\w]+\\.[a-z]+"
   },
   {
-    id: "c6", diff: "intermediate",
+    id: "c8", diff: "intermediate",
     title: "Match Dates (MM/DD/YYYY)",
     desc: "Find all dates in month/day/year format.",
     text: "Filed on 01/15/2024, revised 12/01/2023, due 3/5/2025",
@@ -293,10 +321,34 @@ const CHALLENGES = [
     ],
     solution: "\\d{1,2}/\\d{1,2}/\\d{4}"
   },
+  {
+    id: "c9", diff: "intermediate",
+    title: "Extract Phone Numbers",
+    desc: "Find US phone numbers in different formats.",
+    text: "Call 555-123-4567 or (555) 987-6543 or 555.111.2222 today",
+    expected: ["555-123-4567", "(555) 987-6543", "555.111.2222"],
+    hints: [
+      "Phone numbers have 3 digits, a separator, 3 digits, a separator, 4 digits.",
+      "The area code might be in parentheses. Try: \\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}"
+    ],
+    solution: "\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}"
+  },
+  {
+    id: "c10", diff: "intermediate",
+    title: "Find Repeated Words",
+    desc: "Find words that appear right next to themselves (e.g. 'the the').",
+    text: "The the quick brown fox fox jumped over the the lazy dog",
+    expected: ["the the", "fox fox", "the the"],
+    hints: [
+      "You need a capturing group and a backreference.",
+      "\\b(\\w+)\\s+\\1\\b matches a word followed by itself."
+    ],
+    solution: "\\b(\\w+)\\s+\\1\\b"
+  },
 
   // ── Applied: Fraud Detection ──
   {
-    id: "c7", diff: "applied",
+    id: "c11", diff: "applied",
     title: "Structuring Transactions",
     desc: "Amounts just under $10,000 can signal structuring (splitting deposits to avoid reporting thresholds). Find all amounts between $9,000–$9,999.",
     text: "Deposit: $9,500 | Deposit: $9,999 | Deposit: $10,000 | Deposit: $9,001 | Deposit: $8,500",
@@ -308,7 +360,7 @@ const CHALLENGES = [
     solution: "\\$9,\\d{3}"
   },
   {
-    id: "c8", diff: "applied",
+    id: "c12", diff: "applied",
     title: "Extract IP Addresses",
     desc: "Find all IP addresses in this server log to identify suspicious login sources.",
     text: "Login from 192.168.1.1 at 08:30, failed login from 10.0.0.255, alert from 172.16.0.1",
@@ -320,7 +372,7 @@ const CHALLENGES = [
     solution: "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"
   },
   {
-    id: "c9", diff: "applied",
+    id: "c13", diff: "applied",
     title: "Flag Round-Dollar Transactions",
     desc: "In fraud analysis, many round-dollar amounts (like $500, $1000) can indicate automated or suspicious activity. Find amounts that end in 00.",
     text: "Transfers: $500, $1,200, $75, $3,000, $149, $10,000, $250",
@@ -330,6 +382,96 @@ const CHALLENGES = [
       "Try matching \\$ then digits/commas ending in 00."
     ],
     solution: "\\$[\\d,]*00"
+  },
+  {
+    id: "c14", diff: "applied",
+    title: "Suspicious Email Domains",
+    desc: "Flag email addresses from free/disposable providers often used in fraud. Match emails ending in @gmail.com, @yahoo.com, or @hotmail.com.",
+    text: "Contacts: cfo@acme.com, jdoe@gmail.com, alert@company.org, temp123@yahoo.com, info@hotmail.com",
+    expected: ["jdoe@gmail.com", "temp123@yahoo.com", "info@hotmail.com"],
+    hints: [
+      "Match word characters before @, then use alternation for the domains.",
+      "[\\w.]+@(?:gmail|yahoo|hotmail)\\.com"
+    ],
+    solution: "[\\w.]+@(?:gmail|yahoo|hotmail)\\.com"
+  },
+  {
+    id: "c15", diff: "applied",
+    title: "Timestamp Extraction",
+    desc: "Extract timestamps from this security log. Timestamps are in HH:MM:SS format (24-hour).",
+    text: "[08:15:30] Login attempt | [13:45:02] Access granted | [23:59:59] Session timeout | [02:00:00] Backup started",
+    expected: ["08:15:30", "13:45:02", "23:59:59", "02:00:00"],
+    hints: [
+      "Hours, minutes, seconds are each 2 digits separated by colons.",
+      "\\d{2}:\\d{2}:\\d{2} matches the HH:MM:SS format."
+    ],
+    solution: "\\d{2}:\\d{2}:\\d{2}"
+  },
+
+  // ── Additional Starter ──
+  {
+    id: "c16", diff: "starter",
+    title: "Find Words Ending in 'ing'",
+    desc: "Match every word that ends with the suffix 'ing'.",
+    text: "The running fox was jumping and playing while the sleeping cat watched",
+    expected: ["running", "jumping", "playing", "sleeping"],
+    hints: [
+      "You need letters before 'ing'. What matches a letter?",
+      "[a-zA-Z]+ing matches one or more letters followed by 'ing'."
+    ],
+    solution: "[a-zA-Z]+ing"
+  },
+  {
+    id: "c17", diff: "starter",
+    title: "Extract Hashtags",
+    desc: "Find all the hashtags (# followed by word characters) in this social media text.",
+    text: "Loving this #NLP course! #AI102 is great for #regex practice. See you at #UTK",
+    expected: ["#NLP", "#AI102", "#regex", "#UTK"],
+    hints: [
+      "A hashtag starts with a literal # followed by word characters.",
+      "#\\w+ matches a hash sign followed by one or more word characters."
+    ],
+    solution: "#\\w+"
+  },
+
+  // ── Additional Intermediate ──
+  {
+    id: "c18", diff: "intermediate",
+    title: "Match Zip Codes",
+    desc: "Extract US zip codes — either 5 digits or 5+4 format (e.g. 37916-1234).",
+    text: "Ship to 37916, 90210-5678, or 10001. Not 123 or 1234567.",
+    expected: ["37916", "90210-5678", "10001"],
+    hints: [
+      "Start with exactly 5 digits. The -XXXX part is optional.",
+      "\\b\\d{5}(-\\d{4})?\\b uses a word boundary and an optional group."
+    ],
+    solution: "\\b\\d{5}(-\\d{4})?\\b"
+  },
+  {
+    id: "c19", diff: "intermediate",
+    title: "Find Quoted Text",
+    desc: "Extract everything inside double quotes from this text.",
+    text: "The report said \"suspicious activity\" was found in the \"Q3 ledger\" and flagged as \"high risk\".",
+    expected: ["\"suspicious activity\"", "\"Q3 ledger\"", "\"high risk\""],
+    hints: [
+      "Match an opening quote, then content, then a closing quote.",
+      "\"[^\"]+\" matches a quote, one or more non-quote characters, then a closing quote."
+    ],
+    solution: "\"[^\"]+\""
+  },
+
+  // ── Additional Applied ──
+  {
+    id: "c20", diff: "applied",
+    title: "Detect Redacted SSNs",
+    desc: "In compliance documents, SSNs are often partially redacted as XXX-XX-1234. Find all patterns that look like full or redacted SSNs.",
+    text: "Records: XXX-XX-4521, 123-45-6789, XXX-XX-0001, not-a-ssn, XXX-XX-9999",
+    expected: ["XXX-XX-4521", "123-45-6789", "XXX-XX-0001", "XXX-XX-9999"],
+    hints: [
+      "SSNs are three groups separated by dashes. Each group has letters or digits.",
+      "[A-Z0-9]{3}-[A-Z0-9]{2}-\\d{4} handles both redacted and real SSNs."
+    ],
+    solution: "[A-Z0-9]{3}-[A-Z0-9]{2}-\\d{4}"
   }
 ];
 
@@ -356,7 +498,8 @@ const CHEATSHEET = [
       ["+",     "One or more",             "a+ → a, aa, aaa"],
       ["?",     "Zero or one (optional)",  "colou?r → color, colour"],
       ["{n}",   "Exactly n times",         "\\\\d{3} → 123"],
-      ["{n,m}", "Between n and m times",   "\\\\d{2,4} → 12, 123, 1234"]
+      ["{n,m}", "Between n and m times",   "\\\\d{2,4} → 12, 123, 1234"],
+      ["{n,}",  "n or more times",         "a{2,} → aa, aaa, aaaa"]
     ]
   },
   {
@@ -367,7 +510,10 @@ const CHEATSHEET = [
       ["\\\\w", "Word character (letter, digit, _)", "\\\\w+ → hello_123"],
       ["\\\\W", "Non-word character",               "\\\\W → !, @, spaces"],
       ["\\\\s", "Whitespace (space, tab, newline)",  "\\\\s+ → spaces between words"],
-      ["\\\\S", "Non-whitespace",                   "\\\\S+ → words"]
+      ["\\\\S", "Non-whitespace",                   "\\\\S+ → words"],
+      ["\\\\t", "Tab character explicitly",          "col1\\\\tcol2"],
+      ["\\\\n", "Newline character explicitly",      "line1\\\\nline2"],
+      ["\\\\b", "Word boundary",                     "\\\\bcat\\\\b → cat (not catalog)"]
     ]
   },
   {
@@ -393,11 +539,9 @@ const CHEATSHEET = [
 
 // ───────────────────────────────────────────────
 // Pattern explainer — token dictionary
-// Maps regex tokens to plain-English explanations
 // ───────────────────────────────────────────────
 
 const EXPLAIN_TOKENS = [
-  // Escaped shortcuts (must come before single-char rules)
   { regex: /^\\\$/, label: "\\$",     meaning: "literal dollar sign" },
   { regex: /^\\\./, label: "\\.",     meaning: "literal dot" },
   { regex: /^\\\\/, label: "\\\\",   meaning: "literal backslash" },
@@ -408,30 +552,27 @@ const EXPLAIN_TOKENS = [
   { regex: /^\\s/,  label: "\\s",    meaning: "any whitespace" },
   { regex: /^\\S/,  label: "\\S",    meaning: "any non-whitespace" },
   { regex: /^\\b/,  label: "\\b",    meaning: "word boundary" },
-  { regex: /^\\[0-9A-Za-z]/, label: null, meaning: "literal character" },
+  { regex: /^\\t/,  label: "\\t",    meaning: "tab character" },
+  { regex: /^\\n/,  label: "\\n",    meaning: "newline character" },
+  { regex: /^\\1/,  label: "\\1",    meaning: "backreference to group 1" },
 
-  // Quantifiers (with range variants first)
-  { regex: /^\{(\d+),(\d+)\}/, label: null, meaning: "between $1 and $2 times", build: function(m){ return { label: "{" + m[1] + "," + m[2] + "}", meaning: "between " + m[1] + " and " + m[2] + " times" }; } },
-  { regex: /^\{(\d+),\}/,      label: null, meaning: null, build: function(m){ return { label: "{" + m[1] + ",}", meaning: m[1] + " or more times" }; } },
-  { regex: /^\{(\d+)\}/,       label: null, meaning: null, build: function(m){ return { label: "{" + m[1] + "}", meaning: "exactly " + m[1] + " times" }; } },
+  { regex: /^\{(\d+),(\d+)\}/, label: null, meaning: null, build: function(m){ return { label: "{"+m[1]+","+m[2]+"}", meaning: "between "+m[1]+" and "+m[2]+" times" }; } },
+  { regex: /^\{(\d+),\}/,      label: null, meaning: null, build: function(m){ return { label: "{"+m[1]+",}", meaning: m[1]+" or more times" }; } },
+  { regex: /^\{(\d+)\}/,       label: null, meaning: null, build: function(m){ return { label: "{"+m[1]+"}", meaning: "exactly "+m[1]+" times" }; } },
 
-  // Character sets
   { regex: /^\[([^\]]*)\]/, label: null, meaning: null, build: function(m){
-      var inner = m[1];
-      var neg = inner.charAt(0) === "^";
+      var inner = m[1]; var neg = inner.charAt(0) === "^";
       if (neg) inner = inner.substring(1);
-      return { label: "[" + m[1] + "]", meaning: (neg ? "any character NOT in: " : "any one of: ") + inner };
+      return { label: "["+m[1]+"]", meaning: (neg ? "any character NOT in: " : "any one of: ") + inner };
     }
   },
 
-  // Groups
   { regex: /^\((\?\:)/, label: "(?:",  meaning: "non-capturing group start" },
   { regex: /^\((\?=)/,  label: "(?=",  meaning: "lookahead (followed by…)" },
   { regex: /^\((\?!)/,  label: "(?!",  meaning: "negative lookahead (NOT followed by…)" },
   { regex: /^\(/,        label: "(",    meaning: "group start" },
   { regex: /^\)/,        label: ")",    meaning: "group end" },
 
-  // Anchors & operators
   { regex: /^\^/, label: "^", meaning: "start of string/line" },
   { regex: /^\$/, label: "$", meaning: "end of string/line" },
   { regex: /^\|/, label: "|", meaning: "OR" },

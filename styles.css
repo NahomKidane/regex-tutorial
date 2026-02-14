@@ -69,41 +69,42 @@
 /* ── DARK THEME ────────────────────────────────────────────── */
 
 [data-theme="dark"] {
-  --bg:             #1A1A2E;
-  --bg-subtle:      #16162A;
-  --bg-hover:       #252542;
-  --bg-card:        #1F1F38;
-  --bg-code:        #111122;
-  --bg-code-surface:#1A1A30;
-  --bg-code-border: #2E2E4A;
+  /* Theme D — High Contrast (warm black) */
+  --bg:             #161616;
+  --bg-subtle:      #111111;
+  --bg-hover:       #222222;
+  --bg-card:        #1A1A1A;
+  --bg-code:        #0C0C0C;
+  --bg-code-surface:#141414;
+  --bg-code-border: #2A2A2A;
 
-  --text:           #C8C8D8;
-  --text-bold:      #E8E8F0;
-  --text-secondary: #9898B0;
-  --text-tertiary:  #6A6A85;
+  --text:           #CCCCCC;
+  --text-bold:      #FFFFFF;
+  --text-secondary: #B0B0B0;
+  --text-tertiary:  #888888;
 
-  --border:         #2E2E4A;
-  --border-light:   #252542;
+  --border:         #2A2A2A;
+  --border-light:   #222222;
 
-  --shadow-xs:      0 1px 2px rgba(0,0,0,0.2);
-  --shadow-sm:      0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md:      0 3px 8px rgba(0,0,0,0.35);
-  --shadow-lg:      0 8px 24px rgba(0,0,0,0.4);
+  --shadow-xs:      0 1px 2px rgba(0,0,0,0.3);
+  --shadow-sm:      0 1px 3px rgba(0,0,0,0.4);
+  --shadow-md:      0 3px 8px rgba(0,0,0,0.5);
+  --shadow-lg:      0 8px 24px rgba(0,0,0,0.6);
 
-  --header-bg:      #1A1A2E;
-  --hint-bg:        rgba(33,151,169,0.12);
-  --hint-color:     #5DC4D4;
-  --callout-bg:     rgba(255,130,0,0.08);
-  --callout-color:  #FFAA44;
-  --callout-border: rgba(255,130,0,0.2);
+  --header-bg:      #111111;
+  --hint-bg:        rgba(33,151,169,0.15);
+  --hint-color:     #66D4E4;
+  --callout-bg:     rgba(255,130,0,0.10);
+  --callout-color:  #FFB855;
+  --callout-border: rgba(255,130,0,0.25);
 
-  --orange-light:   rgba(255,130,0,0.1);
-  --orange-muted:   rgba(255,130,0,0.2);
-  --green-light:    rgba(46,125,50,0.12);
-  --berry-light:    rgba(141,32,72,0.15);
-  --teal-light:     rgba(33,151,169,0.12);
-  --red-light:      rgba(198,40,40,0.12);
-  --pg-result-text: #D0D0E0;
+  --orange-light:   rgba(255,130,0,0.12);
+  --orange-muted:   rgba(255,130,0,0.22);
+  --green-light:    rgba(46,125,50,0.15);
+  --berry-light:    rgba(141,32,72,0.18);
+  --teal-light:     rgba(33,151,169,0.15);
+  --red-light:      rgba(198,40,40,0.15);
+  --pg-result-text: #E0E0E0;
 }
 
 
@@ -358,7 +359,7 @@ body {
 .flag-toggle { display: flex; align-items: center; gap: 0.3rem; cursor: pointer; }
 .flag-toggle input[type="checkbox"] { accent-color: var(--orange); width: 14px; height: 14px; cursor: pointer; }
 .flag-toggle .flag-letter { color: #B0B0C8; font-size: 0.76rem; font-weight: 600; font-family: var(--font-mono); }
-.flag-toggle .flag-label  { color: #666; font-size: 0.6rem; font-weight: 500; }
+.flag-toggle .flag-label  { color: #999; font-size: 0.6rem; font-weight: 500; }
 
 
 /* ── Results area ──────────────────────────────────────────── */
@@ -496,7 +497,7 @@ body {
 }
 
 .idle-state .idle-text {
-  color: #555;
+  color: #999;
   font-size: 0.82rem;
   font-family: var(--font-mono);
 }
@@ -569,10 +570,11 @@ body {
 /* ── Lesson cards ──────────────────────────────────────────── */
 
 .lesson-card {
+
   background: var(--bg-card);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-lg);
-  padding: 0.9rem 1.1rem;
+  padding: 1.1rem 1.3rem;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 0.45rem;
@@ -586,12 +588,13 @@ body {
   box-shadow: 0 0 0 1px var(--orange), var(--shadow-sm);
 }
 
-.lesson-card h3 { font-size: 0.86rem; font-weight: 700; color: var(--text-bold); margin-bottom: 0.25rem; line-height: 1.3; }
-.lesson-card p   { font-size: 0.76rem; color: var(--text-secondary); line-height: 1.55; }
+.lesson-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-bold); margin-bottom: 0.25rem; line-height: 1.3; }
+.lesson-card p   { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.55; }
+
 
 .lesson-card .pattern-preview {
   display: inline-block;
-  font-family: var(--font-mono); font-size: 0.73rem;
+  font-family: var(--font-mono); font-size: 0.82rem;
   background: var(--bg-subtle); color: var(--orange-hover);
   padding: 0.1rem 0.45rem; border-radius: var(--radius-pill);
   margin-top: 0.4rem; border: 1px solid var(--border-light); font-weight: 500;
@@ -783,6 +786,75 @@ body {
 /* ── No-select during drag ─────────────────────────────────── */
 body.dragging { cursor: col-resize !important; user-select: none; }
 body.dragging * { cursor: col-resize !important; }
+
+/* ── Accordion — collapsible learn sections ────────────────── */
+
+.accordion-group {
+  margin-bottom: 0.25rem;
+}
+
+.accordion-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-bold);
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.accordion-header:hover {
+  border-color: var(--orange);
+  background: var(--orange-light);
+}
+
+.accordion-group.open .accordion-header {
+  border-color: var(--orange);
+  background: var(--orange-light);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  margin-bottom: 0;
+}
+
+.accordion-arrow {
+  font-size: 0.65rem;
+  color: var(--orange);
+  flex-shrink: 0;
+  width: 14px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.accordion-title {
+  flex: 1;
+}
+
+.accordion-count {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: var(--bg-subtle);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.accordion-group.open .accordion-count {
+  background: var(--bg-card);
+  color: var(--orange);
+}
+
+.accordion-body {
+  padding: 0.5rem 0 0.25rem;
+}
+
 
 /* ── Animation ─────────────────────────────────────────────── */
 
